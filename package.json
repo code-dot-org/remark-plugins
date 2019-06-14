@@ -1,0 +1,42 @@
+{
+  "name": "@code-dot-org/remark-plugins",
+  "version": "1.0.0",
+  "description": "Library of all Remark plugins we use",
+  "main": "dist/main.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "webpack -p",
+    "build:dev": "webpack --progress --colors --mode=development",
+    "test": "tape test/*Test.js",
+    "preversion": "npm run test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-dot-org/remark-plugins.git"
+  },
+  "author": "Code.org <dev@code.org> (http://code.org)",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/code-dot-org/remark-plugins/issues"
+  },
+  "homepage": "https://github.com/code-dot-org/remark-plugins#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "eslint": "^5.16.0",
+    "remark-html": "^9.0.0",
+    "remark-parse": "^6.0.3",
+    "remark-stringify": "^6.0.4",
+    "remark-redactable": "0.2.0",
+    "tape": "^4.10.2",
+    "unified": "^7.1.0",
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4"
+  }
+}

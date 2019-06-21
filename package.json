@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack -p",
     "build:dev": "webpack --progress --colors --mode=development",
-    "test": "tape test/*Test.js",
+    "test": "tape test/*.test.js",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish"

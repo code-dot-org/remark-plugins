@@ -1,42 +1,12 @@
-const html = require('remark-html');
-const markdown = require('remark-parse');
-const stringify = require('remark-stringify');
 const test = require('tape');
-const unified = require('unified');
-const {redact, restore, plugins} = require('remark-redactable');
+
+const {
+  markdownToHtml,
+  markdownToRedacted,
+  sourceAndRedactedToRestored
+} = require('./utils');
 
 const details = require('../src/details');
-
-const markdownToHtml = source =>
-  unified()
-    .use(markdown)
-    .use(html)
-    .use(details)
-    .processSync(source).contents;
-
-const markdownToRedacted = source =>
-  unified()
-    .use(markdown)
-    .use(stringify)
-    .use(redact)
-    .use(details)
-    .processSync(source).contents;
-
-const sourceAndRedactedToRestored = (source, redacted) => {
-  const redactedSourceTree = unified()
-    .use(markdown)
-    .use(stringify)
-    .use(redact)
-    .use(details)
-    .parse(source);
-  return unified()
-    .use(markdown)
-    .use(restore(redactedSourceTree))
-    .use(details)
-    .use(stringify)
-    .use(plugins.rawtext)
-    .processSync(redacted).contents;
-};
 
 test('details can render', t => {
   t.plan(1);
@@ -47,7 +17,7 @@ test('details can render', t => {
   const expected =
     '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -60,7 +30,7 @@ test('details can have a variable number of opening colons', t => {
   const expected =
     '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -73,7 +43,7 @@ test('details can render markdown syntax in the summary', t => {
   const expected =
     '<details><summary><strong>summary</strong> <em>content</em></summary><p>contents, which are sometimes further block elements</p></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -94,7 +64,7 @@ test('details can render markdown syntax in the body', t => {
     '<li>markdown</li>\n' +
     '</ul></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -108,7 +78,7 @@ test('details ignores trailing colons', t => {
   const expected =
     '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -123,7 +93,7 @@ test('details ignores excess whitespace', t => {
   const expected =
     '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -138,7 +108,7 @@ test('details can nest', t => {
   const expected =
     '<details><summary>outer</summary><details><summary>inner</summary><p>innermost content</p></details></details>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -153,7 +123,7 @@ test('details requires a summary block', t => {
     'contents, which are sometimes further block elements\n' +
     ':::</p>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -168,7 +138,7 @@ test('details requires at least three opening colons', t => {
     'contents, which are sometimes further block elements\n' +
     ':::</p>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -181,7 +151,7 @@ test('details requires closing colons', t => {
     '<p>::: details [summary-content]\n' +
     'contents, which are sometimes further block elements</p>\n';
 
-  const rendered = markdownToHtml(markdown);
+  const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -198,7 +168,7 @@ test('details can redact', t => {
     '\n' +
     '[/][0]\n';
 
-  const rendered = markdownToRedacted(markdown);
+  const rendered = markdownToRedacted(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -221,7 +191,7 @@ test('details can redact nested', t => {
     '\n' +
     '[/][0]\n';
 
-  const rendered = markdownToRedacted(markdown);
+  const rendered = markdownToRedacted(markdown, details);
   t.equal(rendered, expected);
 });
 
@@ -243,7 +213,7 @@ test('details can restore', t => {
     'contenu, qui sont parfois des éléments de bloc supplémentaires\n' +
     '\n' +
     ':::\n';
-  const restored = sourceAndRedactedToRestored(original, translated);
+  const restored = sourceAndRedactedToRestored(original, translated, details);
   t.equal(restored, expected);
 });
 
@@ -276,6 +246,6 @@ test('details can restore nested', t => {
     ':::\n' +
     '\n' +
     '::::\n';
-  const restored = sourceAndRedactedToRestored(original, translated);
+  const restored = sourceAndRedactedToRestored(original, translated, details);
   t.equal(restored, expected);
 });

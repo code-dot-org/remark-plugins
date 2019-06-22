@@ -19,22 +19,28 @@ module.exports = function vocablink() {
     redact = Parser.prototype.options.redact;
     Parser.prototype.inlineTokenizers[VOCABLINK] = tokenizeVocablink;
 
-    Parser.prototype.restorationMethods[VOCABLINK] = function (add, node, content) {
-      let value = `[v ${node.vocabword}]`;
-      if (content) {
-        value += `[${content}]`
-      }
-      return add({
-        type: 'rawtext',
-        value 
-      });
+    if (Parser.prototype.restorationMethods) {
+      Parser.prototype.restorationMethods[VOCABLINK] = function(
+        add,
+        node,
+        content
+      ) {
+        let value = `[v ${node.vocabword}]`;
+        if (content) {
+          value += `[${content}]`;
+        }
+        return add({
+          type: 'rawtext',
+          value
+        });
+      };
     }
 
     // Run it just before `html`
     const methods = Parser.prototype.inlineMethods;
     methods.splice(methods.indexOf('html'), 0, VOCABLINK);
   }
-}
+};
 
 tokenizeVocablink.notInLink = true;
 tokenizeVocablink.locator = locateVocablink;
@@ -55,10 +61,12 @@ function tokenizeVocablink(eat, value, silent) {
         type: 'redaction',
         redactionType: VOCABLINK,
         vocabword,
-        children: [{
-          type: 'text',
-          value: override || vocabword
-        }]
+        children: [
+          {
+            type: 'text',
+            value: override || vocabword
+          }
+        ]
       });
     }
 
@@ -73,5 +81,5 @@ function tokenizeVocablink(eat, value, silent) {
 }
 
 function locateVocablink(value, fromIndex) {
-  return value.indexOf("[v ", fromIndex);
+  return value.indexOf('[v ', fromIndex);
 }

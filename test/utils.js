@@ -13,7 +13,7 @@ module.exports.markdownToHtml = (source, plugin = null) =>
 
 module.exports.markdownToRedacted = (source, plugin = null) =>
   unified()
-    .use(markdown, {commonmark: true, pedantic: true})
+    .use(markdown)
     .use(stringify)
     .use(redact)
     .use(plugin)
@@ -25,16 +25,24 @@ module.exports.sourceAndRedactedToRestored = (
   plugin = null
 ) => {
   const redactedSourceTree = unified()
-    .use(markdown, {commonmark: true, pedantic: true})
-    .use(stringify)
+    .use(markdown)
     .use(redact)
     .use(plugin)
     .parse(source);
   return unified()
-    .use(markdown, {commonmark: true, pedantic: true})
+    .use(markdown)
     .use(restore(redactedSourceTree))
     .use(plugin)
     .use(stringify)
     .use(plugins.rawtext)
     .processSync(redacted).contents;
+};
+
+module.exports.sourceAndRedactedToHtml = (
+  source,
+  redacted,
+  plugin = null
+) => {
+  const restored = module.exports.sourceAndRedactedToRestored(source, redacted, plugin);
+  return module.exports.markdownToHtml(restored, plugin);
 };

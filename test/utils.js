@@ -6,21 +6,21 @@ const {redact, restore, plugins} = require('remark-redactable');
 
 module.exports.markdownToSyntaxTree = (source, plugin = null) =>
   unified()
-    .use(markdown)
+    .use(markdown, {commonmark: true})
     .use(html)
     .use(plugin)
     .parse(source);
 
 module.exports.markdownToHtml = (source, plugin = null) =>
   unified()
-    .use(markdown)
+    .use(markdown, {commonmark: true})
     .use(html)
     .use(plugin)
     .processSync(source).contents;
 
 module.exports.markdownToRedacted = (source, plugin = null) =>
   unified()
-    .use(markdown)
+    .use(markdown, {commonmark: true})
     .use(stringify)
     .use(redact)
     .use(plugin)
@@ -32,15 +32,15 @@ module.exports.sourceAndRedactedToRestored = (
   plugin = null
 ) => {
   const redactedSourceTree = unified()
-    .use(markdown)
+    .use(markdown, {commonmark: true})
     .use(redact)
     .use(plugin)
     .parse(source);
   return unified()
-    .use(markdown)
+    .use(markdown, {commonmark: true})
     .use(restore(redactedSourceTree))
-    .use(plugin)
     .use(stringify)
+    .use(plugin)
     .use(plugins.rawtext)
     .processSync(redacted).contents;
 };
@@ -67,7 +67,9 @@ module.exports.mapMdast = node => {
   };
 
   if (node.children) {
-    result.children = node.children.map(child => module.exports.mapMdast(child));
+    result.children = node.children.map(child =>
+      module.exports.mapMdast(child)
+    );
   }
 
   return result;

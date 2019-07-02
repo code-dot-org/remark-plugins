@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/remark-plugins",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library of all Remark plugins we use",
   "main": "dist/main.js",
   "files": [

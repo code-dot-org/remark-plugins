@@ -33,8 +33,8 @@ module.exports = function details() {
   const restorationMethods = Parser.prototype.restorationMethods;
 
   if (restorationMethods) {
-    restorationMethods.details = function(add, nodes, content, children) {
-      const colonCount = nodes.open.openingColonCount;
+    restorationMethods.details = function(add, node, content, children) {
+      const colonCount = node.redactionData;
       const open = add({
         type: 'paragraph',
         children: [
@@ -186,23 +186,13 @@ function tokenizeDetails(eat, value, silent) {
   exit();
 
   if (redact) {
-    const open = add({
-      type: 'redaction',
+    return add({
+      type: 'blockRedaction',
+      children: body,
       redactionType: 'details',
-      block: true,
-      children: summary,
-      openingColonCount
+      redactionContent: summary,
+      redactionData: openingColonCount
     });
-
-    const contents = body.map(content => add(content));
-
-    const close = add({
-      type: 'redaction',
-      block: true,
-      closing: true
-    });
-
-    return [open, ...contents, close];
   }
 
   return add({

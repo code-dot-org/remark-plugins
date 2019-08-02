@@ -11,7 +11,7 @@ module.exports = function blockly() {
       Parser.prototype.restorationMethods[BLOCKLY] = function(add, node) {
         return add({
           type: 'rawtext',
-          value: node.original
+          value: node.redactionData
         });
       };
     }
@@ -62,10 +62,10 @@ function tokenizeBlockly(eat, value, silent) {
   // Eat to end of closing tag
   const original = value.substring(0, closingIndex + closingTag.length);
   return eat(original)({
-    type: 'redaction',
+    type: 'inlineRedaction',
     redactionType: BLOCKLY,
-    original,
-    children: [
+    redactionData: original,
+    redactionContent: [
       {
         type: 'text',
         value: 'blockly block'

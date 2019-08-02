@@ -23,7 +23,7 @@ module.exports = function resourcelink() {
       Parser.prototype.restorationMethods[RESOURCELINK] = function (add, node) {
         return add({
           type: 'rawtext',
-          value: `[r ${node.slug}]`
+          value: `[r ${node.redactionData}]`
         });
       }
     }
@@ -48,10 +48,10 @@ function tokenizeResourcelink(eat, value, silent) {
 
     const slug = match[1];
     return eat(match[0])({
-      type: 'redaction',
+      type: 'inlineRedaction',
       redactionType: RESOURCELINK,
-      slug,
-      children: [{
+      redactionData: slug,
+      redactionContent: [{
         type: 'text',
         value: slug
       }]

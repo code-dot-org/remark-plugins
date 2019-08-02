@@ -25,7 +25,7 @@ module.exports = function vocablink() {
         node,
         content
       ) {
-        let value = `[v ${node.vocabword}]`;
+        let value = `[v ${node.redactionData}]`;
         if (content) {
           value += `[${content}]`;
         }
@@ -58,10 +58,10 @@ function tokenizeVocablink(eat, value, silent) {
     const override = match[2];
     if (redact) {
       return add({
-        type: 'redaction',
+        type: 'inlineRedaction',
         redactionType: VOCABLINK,
-        vocabword,
-        children: [
+        redactionData: vocabword,
+        redactionContent: [
           {
             type: 'text',
             value: override || vocabword

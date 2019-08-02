@@ -17,7 +17,7 @@ module.exports = function mention() {
       restorationMethods.tiplink = function (add, node) {
         return add({
           type: 'text',
-          value: `${node.tipType}!!! ${node.tipLink}`
+          value: `${node.redactionData.tipType}!!! ${node.redactionData.tipLink}`
         });
       }
     }
@@ -94,10 +94,12 @@ function tokenizeTiplink(eat, value, silent) {
 
     if (redact) {
       return add({
-        type: 'redaction',
+        type: 'inlineRedaction',
         redactionType: 'tiplink',
-        tipType,
-        tipLink
+        redactionData: {
+          tipType,
+          tipLink
+        }
       });
     }
 

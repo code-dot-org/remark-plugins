@@ -2,7 +2,7 @@ let redact;
 
 const removeIndentation = require('remark-parse/lib/util/remove-indentation');
 
-const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/
+const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/;
 
 module.exports = function tip() {
   const Parser = this.Parser;
@@ -11,7 +11,7 @@ module.exports = function tip() {
   const restorationMethods = Parser.prototype.restorationMethods;
 
   if (restorationMethods) {
-    restorationMethods.tip = function (add, node, content, children) {
+    restorationMethods.tip = function(add, node, content, children) {
       let value = `!!!${node.redactionData.tipType}`;
       if (content) {
         value += ` "${content}"`;
@@ -21,15 +21,18 @@ module.exports = function tip() {
       }
       return add({
         type: 'paragraph',
-        children: [{
-          type: 'rawtext',
-          value: value + "\n"
-        }, {
-          type: 'indent',
-          children
-        }]
+        children: [
+          {
+            type: 'rawtext',
+            value: value + '\n',
+          },
+          {
+            type: 'indent',
+            children,
+          },
+        ],
       });
-    }
+    };
   }
 
   redact = Parser.prototype.options.redact;
@@ -38,7 +41,32 @@ module.exports = function tip() {
 
   /* Run it just before `paragraph`. */
   methods.splice(methods.indexOf('paragraph'), 0, 'tip');
-}
+};
+
+module.exports.restorationMethods = {
+  tip: function(node, content, children) {
+    let value = `!!!${node.redactionData.tipType}`;
+    if (content) {
+      value += ` "${content}"`;
+    }
+    if (node.redactionData.id) {
+      value += ` <${node.redactionData.id}>`;
+    }
+    return {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'rawtext',
+          value: value + '\n',
+        },
+        {
+          type: 'indent',
+          children,
+        }
+      ]
+    };
+  }
+};
 
 function tokenizeTip(eat, value, silent) {
   const match = RE.exec(value);
@@ -60,11 +88,11 @@ function tokenizeTip(eat, value, silent) {
   let index = match[0].length;
   while (index < value.length) {
     index++;
-    if (value.charAt(index) === "\n") {
-      if (value.charAt(index + 1) !== "\n") {
+    if (value.charAt(index) === '\n') {
+      if (value.charAt(index + 1) !== '\n') {
         let nextLine = value.slice(index + 1, index + 5);
-        nextLine = nextLine.replace("\t", "    ");
-        if (!nextLine.startsWith("    ")) {
+        nextLine = nextLine.replace('\t', '    ');
+        if (!nextLine.startsWith('    ')) {
           break;
         }
       }
@@ -72,10 +100,13 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || "";
+  const title = match[2] || '';
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
-  const children = this.tokenizeBlock(removeIndentation(subvalue, 4), eat.now());
+  const children = this.tokenizeBlock(
+    removeIndentation(subvalue, 4),
+    eat.now(),
+  );
   const add = eat(match[0] + subvalue);
 
   if (redact) {
@@ -83,48 +114,56 @@ function tokenizeTip(eat, value, silent) {
       type: 'blockRedaction',
       children,
       redactionType: 'tip',
-      redactionContent: [{
-        type: "text",
-        value: title
-      }],
+      redactionContent: [
+        {
+          type: 'text',
+          value: title,
+        },
+      ],
       redactionData: {
         id,
-        tipType
-      }
+        tipType,
+      },
     });
   }
 
   return add({
-    type: "div",
-    children: [{
-      type: "paragraph",
-      children: [{
-        type: 'emphasis',
-        children: [],
+    type: 'div',
+    children: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'emphasis',
+            children: [],
+            data: {
+              hName: 'i',
+              hProperties: {
+                className: 'fa fa-lightbulb-o',
+              },
+            },
+          },
+          {
+            type: 'text',
+            value: title,
+          },
+        ],
         data: {
-          hName: 'i',
           hProperties: {
-            className: "fa fa-lightbulb-o"
-          }
-        }
-      }, {
-        type: "text",
-        value: title
-      }],
-      data: {
-        hProperties: {
-          className: "admonition-title",
-          id: id && `tip_${id}`
-        }
-      }
-    }, {
-      type: "div",
-      children
-    }],
+            className: 'admonition-title',
+            id: id && `tip_${id}`,
+          },
+        },
+      },
+      {
+        type: 'div',
+        children,
+      },
+    ],
     data: {
       hProperties: {
-        className: "admonition tip"
-      }
-    }
+        className: 'admonition tip',
+      },
+    },
   });
 }

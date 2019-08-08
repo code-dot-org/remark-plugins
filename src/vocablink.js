@@ -23,7 +23,7 @@ module.exports = function vocablink() {
       Parser.prototype.restorationMethods[VOCABLINK] = function(
         add,
         node,
-        content
+        content,
       ) {
         let value = `[v ${node.redactionData}]`;
         if (content) {
@@ -31,7 +31,7 @@ module.exports = function vocablink() {
         }
         return add({
           type: 'rawtext',
-          value
+          value,
         });
       };
     }
@@ -39,6 +39,19 @@ module.exports = function vocablink() {
     // Run it just before `html`
     const methods = Parser.prototype.inlineMethods;
     methods.splice(methods.indexOf('html'), 0, VOCABLINK);
+  }
+};
+
+module.exports.restorationMethods = {
+  vocablink: function(node, content) {
+    let value = `[v ${node.redactionData}]`;
+    if (content) {
+      value += `[${content}]`;
+    }
+    return {
+      type: 'rawtext',
+      value
+    };
   }
 };
 
@@ -64,9 +77,9 @@ function tokenizeVocablink(eat, value, silent) {
         redactionContent: [
           {
             type: 'text',
-            value: override || vocabword
-          }
-        ]
+            value: override || vocabword,
+          },
+        ],
       });
     }
 
@@ -75,7 +88,7 @@ function tokenizeVocablink(eat, value, silent) {
     // to the raw string
     return add({
       type: 'rawtext',
-      value: match[0]
+      value: match[0],
     });
   }
 }

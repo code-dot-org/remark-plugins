@@ -1,6 +1,6 @@
 let redact;
 
-const TIPLINK_RE = /^([\w-]+)!!! ?([\w-]+)?/
+const TIPLINK_RE = /^([\w-]+)!!! ?([\w-]+)?/;
 const TIPLINK_LOCATOR_RE = /[\w-]+!!!/;
 
 /**
@@ -14,12 +14,14 @@ module.exports = function mention() {
     const restorationMethods = Parser.prototype.restorationMethods;
 
     if (restorationMethods) {
-      restorationMethods.tiplink = function (add, node) {
+      restorationMethods.tiplink = function(add, node) {
         return add({
           type: 'text',
-          value: `${node.redactionData.tipType}!!! ${node.redactionData.tipLink}`
+          value: `${node.redactionData.tipType}!!! ${
+            node.redactionData.tipLink
+          }`,
         });
-      }
+      };
     }
 
     redact = Parser.prototype.options.redact;
@@ -30,7 +32,16 @@ module.exports = function mention() {
     /* Run it just before `text`. */
     methods.splice(methods.indexOf('text'), 0, 'tiplink');
   }
-}
+};
+
+module.exports.restorationMethods = {
+  tiplink: function(node) {
+    return {
+      type: 'text',
+      value: `${node.redactionData.tipType}!!! ${node.redactionData.tipLink}`
+    };
+  }
+};
 
 tokenizeTiplink.notInLink = true;
 tokenizeTiplink.locator = locateTiplink;
@@ -44,38 +55,43 @@ function createTiplink(add, tipType, tipLink) {
         className: `tiplink tiplink-${tipType}`,
       },
     },
-  }
-
+  };
 
   let icon;
   if (tipType == 'tip') {
-    icon = "lightbulb-o";
+    icon = 'lightbulb-o';
   } else if (tipType == 'discussion') {
-    icon = "comments";
+    icon = 'comments';
   } else if (tipType == 'assessment') {
-    icon = "check-circle";
+    icon = 'check-circle';
   } else if (tipType == 'content') {
-    icon = "mortar-board";
+    icon = 'mortar-board';
   } else {
-    icon = "warning";
+    icon = 'warning';
   }
 
-  const child = add({
-    type: 'link',
-    url: `#${tipType}_${tipLink}`,
-    children: []
-  }, element);
+  const child = add(
+    {
+      type: 'link',
+      url: `#${tipType}_${tipLink}`,
+      children: [],
+    },
+    element,
+  );
 
-  add({
-    type: 'emphasis',
-    children: [],
-    data: {
-      hName: 'i',
-      hProperties: {
-        className: `fa fa-${icon}`
+  add(
+    {
+      type: 'emphasis',
+      children: [],
+      data: {
+        hName: 'i',
+        hProperties: {
+          className: `fa fa-${icon}`,
+        },
       },
     },
-  }, child)
+    child,
+  );
 
   return add(element);
 }
@@ -98,8 +114,8 @@ function tokenizeTiplink(eat, value, silent) {
         redactionType: 'tiplink',
         redactionData: {
           tipType,
-          tipLink
-        }
+          tipLink,
+        },
       });
     }
 

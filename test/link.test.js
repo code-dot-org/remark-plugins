@@ -1,10 +1,6 @@
 const test = require("tape");
 
-const {
-  markdownToHtml,
-  markdownToRedacted,
-  sourceAndRedactedToRestored
-} = require("./utils");
+const { markdownToRedacted, sourceAndRedactedToRestored } = require("./utils");
 
 const link = require("../src/link");
 
@@ -26,7 +22,10 @@ test("link plugin redacts images", t => {
 
 test("link plugin redacts autolinks", t => {
   t.plan(1);
-  t.equal(markdownToRedacted(examples.autolink, link), "[http://example.com][0]\n");
+  t.equal(
+    markdownToRedacted(examples.autolink, link),
+    "[http://example.com][0]\n"
+  );
 });
 
 test("link plugin can restore links back to markdown", t => {
@@ -46,6 +45,10 @@ test("link plugin can restore images back to markdown", t => {
 test("link plugin can restore autolinks back to markdown", t => {
   t.plan(1);
   const redacted = "[any-text][0]";
-  const restored = sourceAndRedactedToRestored(examples.autolink, redacted, link);
+  const restored = sourceAndRedactedToRestored(
+    examples.autolink,
+    redacted,
+    link
+  );
   t.equal(restored, "[any-text](http://example.com)\n");
 });

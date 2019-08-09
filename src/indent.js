@@ -11,15 +11,19 @@
  */
 module.exports = function rawtext() {
   if (this.Compiler) {
-    const Compiler = this.Compiler;
-    const visitors = Compiler.prototype.visitors;
+    const visitors = this.Compiler.prototype.visitors;
 
-    visitors.indent = function (node) {
-      const indentation = "    ";
-      const newline = "\n";
-      return this.all(node).map(
-        child => indentation + child.split(newline).join(newline + indentation)
-      ).join(newline + newline);
+    if (visitors) {
+      visitors.indent = function(node) {
+        const indentation = "    ";
+        const newline = "\n";
+        return this.all(node)
+          .map(
+            child =>
+              indentation + child.split(newline).join(newline + indentation)
+          )
+          .join(newline + newline);
+      };
     }
   }
-}
+};

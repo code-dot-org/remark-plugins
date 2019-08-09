@@ -28,6 +28,7 @@
     "remark-redactable": "0.3.0",
     "remark-stringify": "^6.0.4",
     "tape": "^4.10.2",
-    "unified": "^7.1.0"
+    "unified": "^7.1.0",
+    "unist-builder": "^1.0.4"
   }
 }

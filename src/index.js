@@ -1,6 +1,7 @@
 const blockfield = require('./blockfield');
 const blockly = require('./blockly');
 const details = require('./details');
+const divclass = require('./divclass');
 const indent = require('./indent');
 const link = require('./link');
 const resourcelink = require('./resourcelink');
@@ -12,6 +13,7 @@ module.exports = {
   blockfield,
   blockly,
   details,
+  divclass,
   indent,
   link,
   resourcelink,

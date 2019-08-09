@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/remark-plugins",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Library of all Remark plugins we use",
   "main": "src/index.js",
   "files": [

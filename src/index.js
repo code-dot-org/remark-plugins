@@ -3,6 +3,7 @@ const blockly = require('./blockly');
 const details = require('./details');
 const indent = require('./indent');
 const link = require('./link');
+const rawtext = require('./rawtext');
 const resourcelink = require('./resourcelink');
 const tip = require('./tip');
 const tiplink = require('./tiplink');
@@ -14,6 +15,7 @@ module.exports = {
   details,
   indent,
   link,
+  rawtext,
   resourcelink,
   tip,
   tiplink,

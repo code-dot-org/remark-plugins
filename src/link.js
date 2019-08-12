@@ -83,6 +83,27 @@ module.exports = function redactedLink() {
   }
 };
 
+module.exports.restorationMethods = {
+  link: function(node, content) {
+    return Object.assign({}, node, {
+      type: "link",
+      children: [
+        {
+          type: "text",
+          value: content
+        }
+      ]
+    });
+  },
+
+  image: function(node, content) {
+    return Object.assign({}, node, {
+      type: "image",
+      alt: content
+    });
+  }
+};
+
 function tokenizeRedactedLink(eat, value, silent) {
   const link = tokenizeLink.call(this, eat, value, silent);
   if (link) {

@@ -9,7 +9,7 @@
  *
  * @see plugins/parser/tip
  */
-module.exports = function rawtext() {
+module.exports = function indent() {
   if (this.Compiler) {
     const visitors = this.Compiler.prototype.visitors;
 

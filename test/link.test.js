@@ -6,6 +6,7 @@ const link = require("../src/link");
 
 const examples = {
   link: "[test](http://example.com)",
+  linkWithTitle: "[test](http://example.com \"example\")",
   image: "![test](http://example.com/test.jpg)",
   autolink: "<http://example.com>"
 };
@@ -13,6 +14,11 @@ const examples = {
 test("link plugin redacts links", t => {
   t.plan(1);
   t.equal(markdownToRedacted(examples.link, link), "[test][0]\n");
+});
+
+test("link plugin redacts links with titles", t => {
+  t.plan(1);
+  t.equal(markdownToRedacted(examples.linkWithTitle, link), "[test][0]\n");
 });
 
 test("link plugin redacts images", t => {
@@ -33,6 +39,13 @@ test("link plugin can restore links back to markdown", t => {
   const redacted = "[any-text][0]";
   const restored = sourceAndRedactedToRestored(examples.link, redacted, link);
   t.equal(restored, "[any-text](http://example.com)\n");
+});
+
+test("link plugin can restore links with titles back to markdown", t => {
+  t.plan(1);
+  const redacted = "[any-text][0]";
+  const restored = sourceAndRedactedToRestored(examples.linkWithTitle, redacted, link);
+  t.equal(restored, "[any-text](http://example.com \"example\")\n");
 });
 
 test("link plugin can restore images back to markdown", t => {

@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/remark-plugins",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "Library of all Remark plugins we use",
   "main": "src/index.js",
   "files": [
@@ -28,6 +28,7 @@
     "remark-redactable": "0.3.0",
     "remark-stringify": "^6.0.4",
     "tape": "^4.10.2",
-    "unified": "^7.1.0"
+    "unified": "^7.1.0",
+    "unist-builder": "^1.0.4"
   }
 }

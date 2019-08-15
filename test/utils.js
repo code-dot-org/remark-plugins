@@ -2,8 +2,8 @@ const unified = require('unified');
 const stringify = require('remark-stringify');
 const markdown = require('remark-parse');
 const html = require('remark-html');
+const {redact, restore, parseRestorations} = require('remark-redactable');
 const rawtext = require('../src/rawtext');
-const {redact, restore} = require('remark-redactable');
 
 module.exports.markdownToSyntaxTree = (source, plugin = null) =>
   unified()
@@ -32,18 +32,31 @@ module.exports.sourceAndRedactedToRestored = (
   redacted,
   plugin = null
 ) => {
+  let restorationMethods;
+  if (plugin.length) {
+    restorationMethods = plugin
+      .map(p => p.restorationMethods)
+      .reduce((acc, val) => Object.assign({}, acc, val), {});
+  } else {
+    restorationMethods = plugin.restorationMethods;
+  }
   const redactedSourceTree = unified()
     .use(markdown, {commonmark: true})
     .use(redact)
     .use(plugin)
     .parse(source);
+  const restorationTree = unified()
+    .use(markdown, {commomark: true})
+    .use(parseRestorations)
+    .parse(redacted);
+  const mergedTree = unified()
+    .use(restore, redactedSourceTree, restorationMethods)
+    .runSync(restorationTree);
   return unified()
-    .use(markdown, {commonmark: true})
-    .use(restore(redactedSourceTree))
     .use(stringify)
-    .use(plugin)
     .use(rawtext)
-    .processSync(redacted).contents;
+    .use(plugin)
+    .stringify(mergedTree);
 };
 
 module.exports.sourceAndRedactedToHtml = (source, redacted, plugin = null) => {

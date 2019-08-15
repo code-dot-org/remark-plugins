@@ -7,16 +7,18 @@ const TIP = 'tip';
 
 module.exports = function tip() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.blockTokenizers;
-  const methods = Parser.prototype.blockMethods;
-  const restorationMethods = Parser.prototype.restorationMethods;
 
-  redact = Parser.prototype.options.redact;
+  if (Parser) {
+    const tokenizers = Parser.prototype.blockTokenizers;
+    const methods = Parser.prototype.blockMethods;
 
-  tokenizers[TIP] = tokenizeTip;
+    redact = Parser.prototype.options.redact;
 
-  /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, TIP);
+    tokenizers.tip = tokenizeTip;
+
+    /* Run it just before `paragraph`. */
+    methods.splice(methods.indexOf('paragraph'), 0, 'tip');
+  }
 };
 
 module.exports.restorationMethods = {

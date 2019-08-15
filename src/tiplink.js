@@ -12,7 +12,6 @@ module.exports = function mention() {
     const Parser = this.Parser;
     const tokenizers = Parser.prototype.inlineTokenizers;
     const methods = Parser.prototype.inlineMethods;
-    const restorationMethods = Parser.prototype.restorationMethods;
 
     redact = Parser.prototype.options.redact;
 

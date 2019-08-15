@@ -30,15 +30,16 @@ let redact;
 
 module.exports = function details() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.blockTokenizers;
-  const methods = Parser.prototype.blockMethods;
-  const restorationMethods = Parser.prototype.restorationMethods;
+  if (Parser) {
+    const tokenizers = Parser.prototype.blockTokenizers;
+    const methods = Parser.prototype.blockMethods;
 
-  redact = Parser.prototype.options.redact;
-  tokenizers.details = tokenizeDetails;
+    redact = Parser.prototype.options.redact;
+    tokenizers.details = tokenizeDetails;
 
-  /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, DETAILS);
+    /* Run it just before `paragraph`. */
+    methods.splice(methods.indexOf('paragraph'), 0, 'details');
+  }
 };
 
 module.exports.restorationMethods = {

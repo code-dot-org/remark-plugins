@@ -71,16 +71,17 @@ let redact;
 
 module.exports = function divclass() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.blockTokenizers;
-  const methods = Parser.prototype.blockMethods;
-  const restorationMethods = Parser.prototype.restorationMethods;
+  if (Parser) {
+    const tokenizers = Parser.prototype.blockTokenizers;
+    const methods = Parser.prototype.blockMethods;
 
-  redact = Parser.prototype.options.redact;
+    redact = Parser.prototype.options.redact;
 
-  tokenizers.divclass = tokenizeDivclass;
+    tokenizers.divclass = tokenizeDivclass;
 
-  /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, DIVCLASS);
+    /* Run it just before `paragraph`. */
+    methods.splice(methods.indexOf('paragraph'), 0, DIVCLASS);
+  }
 };
 
 module.exports.restorationMethods = {

@@ -68,7 +68,7 @@ module.exports = function redactedLink() {
 
   // override links
   const originalLinkTokenizer = tokenizers.link;
-  tokenizers.link = function (eat, value, silent) {
+  tokenizers.link = function(eat, value, silent) {
     const link = originalLinkTokenizer.call(this, eat, value, silent);
     if (!link) {
       return;
@@ -84,12 +84,12 @@ module.exports = function redactedLink() {
 
   // override autolinks
   const originalAutoLinkTokenizer = tokenizers.autoLink;
-  tokenizers.autoLink = function (eat, value, silent) {
+  tokenizers.autoLink = function(eat, value, silent) {
     const autoLink = originalAutoLinkTokenizer.call(this, eat, value, silent);
     if (autoLink) {
-      redactLink(autoLink)
+      redactLink(autoLink);
     }
-  }
+  };
   tokenizers.autoLink.locator = originalAutoLinkTokenizer.locator;
 };
 
@@ -125,3 +125,26 @@ function redactImage(node) {
   ];
   delete node.alt;
 }
+
+module.exports.restorationMethods = {
+  link: function(node, content) {
+    return {
+      type: "link",
+      url: node.redactionData.url,
+      title: node.redactionData.title,
+      children: [
+        {
+          type: "text",
+          value: content
+        }
+      ]
+    };
+  },
+  image: function(node, content) {
+    return {
+      type: "image",
+      url: node.redactionData.url,
+      alt: content
+    };
+  }
+};

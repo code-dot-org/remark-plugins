@@ -6,41 +6,18 @@ const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/;
 
 module.exports = function tip() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.blockTokenizers;
-  const methods = Parser.prototype.blockMethods;
-  const restorationMethods = Parser.prototype.restorationMethods;
 
-  if (restorationMethods) {
-    restorationMethods.tip = function(add, node, content, children) {
-      let value = `!!!${node.redactionData.tipType}`;
-      if (content) {
-        value += ` "${content}"`;
-      }
-      if (node.redactionData.id) {
-        value += ` <${node.redactionData.id}>`;
-      }
-      return add({
-        type: 'paragraph',
-        children: [
-          {
-            type: 'rawtext',
-            value: value + '\n',
-          },
-          {
-            type: 'indent',
-            children,
-          },
-        ],
-      });
-    };
+  if (Parser) {
+    const tokenizers = Parser.prototype.blockTokenizers;
+    const methods = Parser.prototype.blockMethods;
+
+    redact = Parser.prototype.options.redact;
+
+    tokenizers.tip = tokenizeTip;
+
+    /* Run it just before `paragraph`. */
+    methods.splice(methods.indexOf('paragraph'), 0, 'tip');
   }
-
-  redact = Parser.prototype.options.redact;
-
-  tokenizers.tip = tokenizeTip;
-
-  /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, 'tip');
 };
 
 module.exports.restorationMethods = {
@@ -57,11 +34,11 @@ module.exports.restorationMethods = {
       children: [
         {
           type: 'rawtext',
-          value: value + '\n',
+          value: value + '\n'
         },
         {
           type: 'indent',
-          children,
+          children
         }
       ]
     };
@@ -105,7 +82,7 @@ function tokenizeTip(eat, value, silent) {
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
     removeIndentation(subvalue, 4),
-    eat.now(),
+    eat.now()
   );
   const add = eat(match[0] + subvalue);
 
@@ -117,13 +94,13 @@ function tokenizeTip(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: title,
-        },
+          value: title
+        }
       ],
       redactionData: {
         id,
-        tipType,
-      },
+        tipType
+      }
     });
   }
 
@@ -139,31 +116,31 @@ function tokenizeTip(eat, value, silent) {
             data: {
               hName: 'i',
               hProperties: {
-                className: 'fa fa-lightbulb-o',
-              },
-            },
+                className: 'fa fa-lightbulb-o'
+              }
+            }
           },
           {
             type: 'text',
-            value: title,
-          },
+            value: title
+          }
         ],
         data: {
           hProperties: {
             className: 'admonition-title',
-            id: id && `tip_${id}`,
-          },
-        },
+            id: id && `tip_${id}`
+          }
+        }
       },
       {
         type: 'div',
-        children,
-      },
+        children
+      }
     ],
     data: {
       hProperties: {
-        className: 'admonition tip',
-      },
-    },
+        className: 'admonition tip'
+      }
+    }
   });
 }

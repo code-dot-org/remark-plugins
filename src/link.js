@@ -32,70 +32,47 @@
  */
 module.exports = function redactedLink() {
   const Parser = this.Parser;
-  const restorationMethods = Parser.prototype.restorationMethods;
 
-  if (restorationMethods) {
-    restorationMethods.link = function(add, node, content) {
-      return add({
-        type: "link",
-        url: node.redactionData.url,
-        title: node.redactionData.title,
-        children: [
-          {
-            type: "text",
-            value: content
-          }
-        ]
-      });
-    };
-
-    restorationMethods.image = function(add, node, content) {
-      return add({
-        type: "image",
-        url: node.redactionData.url,
-        alt: content
-      });
-    };
-  }
-
-  // If in redacted mode, run this instead of original link and autolink
-  // tokenizers. If running regularly, do nothing special.
-  if (!Parser.prototype.options.redact) {
-    return;
-  }
-
-  const tokenizers = Parser.prototype.inlineTokenizers;
-
-  // override links
-  const originalLinkTokenizer = tokenizers.link;
-  tokenizers.link = function(eat, value, silent) {
-    const link = originalLinkTokenizer.call(this, eat, value, silent);
-    if (!link) {
+  if (Parser) {
+    // If in redacted mode, run this instead of original link and autolink
+    // tokenizers. If running regularly, do nothing special.
+    if (!Parser.prototype.options.redact) {
       return;
     }
 
-    if (link.type === "link") {
-      redactLink(link);
-    } else if (link.type === "image") {
-      redactImage(link);
-    }
-  };
-  tokenizers.link.locator = originalLinkTokenizer.locator;
+    const tokenizers = Parser.prototype.inlineTokenizers;
 
-  // override autolinks
-  const originalAutoLinkTokenizer = tokenizers.autoLink;
-  tokenizers.autoLink = function(eat, value, silent) {
-    const autoLink = originalAutoLinkTokenizer.call(this, eat, value, silent);
-    if (autoLink) {
-      redactLink(autoLink);
-    }
-  };
-  tokenizers.autoLink.locator = originalAutoLinkTokenizer.locator;
+    // override links
+    const originalLinkTokenizer = tokenizers.link;
+    tokenizers.link = function(eat, value, silent) {
+      const link = originalLinkTokenizer.call(this, eat, value, silent);
+      if (!link) {
+        return;
+      }
+
+      if (link.type === 'link') {
+        redactLink(link);
+      } else if (link.type === 'image') {
+        redactImage(link);
+      }
+    };
+    tokenizers.link.locator = originalLinkTokenizer.locator;
+
+    // override autolinks
+    const originalAutoLinkTokenizer = tokenizers.autoLink;
+    tokenizers.autoLink = function(eat, value, silent) {
+      const autoLink = originalAutoLinkTokenizer.call(this, eat, value, silent);
+      if (autoLink) {
+        redactLink(autoLink);
+      }
+    };
+    tokenizers.autoLink.locator = originalAutoLinkTokenizer.locator;
+  }
 };
 
 function redactLink(node) {
   node.redactionType = node.type;
-  node.type = "inlineRedaction";
+  node.type = 'inlineRedaction';
 
   node.redactionData = {
     url: node.url,
@@ -110,7 +87,7 @@ function redactLink(node) {
 
 function redactImage(node) {
   node.redactionType = node.type;
-  node.type = "inlineRedaction";
+  node.type = 'inlineRedaction';
 
   node.redactionData = {
     url: node.url
@@ -119,8 +96,8 @@ function redactImage(node) {
 
   node.redactionContent = [
     {
-      type: "text",
-      value: node.alt || ""
+      type: 'text',
+      value: node.alt || ''
     }
   ];
   delete node.alt;
@@ -129,12 +106,12 @@ function redactImage(node) {
 module.exports.restorationMethods = {
   link: function(node, content) {
     return {
-      type: "link",
+      type: 'link',
       url: node.redactionData.url,
       title: node.redactionData.title,
       children: [
         {
-          type: "text",
+          type: 'text',
           value: content
         }
       ]
@@ -142,7 +119,7 @@ module.exports.restorationMethods = {
   },
   image: function(node, content) {
     return {
-      type: "image",
+      type: 'image',
       url: node.redactionData.url,
       alt: content
     };

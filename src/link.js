@@ -1,7 +1,3 @@
-let redact;
-let tokenizeLink;
-let tokenizeAutoLink;
-
 /**
  * Parser extension to support rendering of links (including images and
  * autolinks) when in redact mode.
@@ -36,83 +32,96 @@ let tokenizeAutoLink;
  */
 module.exports = function redactedLink() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.inlineTokenizers;
-  const methods = Parser.prototype.inlineMethods;
   const restorationMethods = Parser.prototype.restorationMethods;
 
   if (restorationMethods) {
     restorationMethods.link = function(add, node, content) {
-      return add(
-        Object.assign({}, node, {
-          type: "link",
-          children: [
-            {
-              type: "text",
-              value: content
-            }
-          ]
-        })
-      );
+      return add({
+        type: "link",
+        url: node.redactionData.url,
+        title: node.redactionData.title,
+        children: [
+          {
+            type: "text",
+            value: content
+          }
+        ]
+      });
     };
 
     restorationMethods.image = function(add, node, content) {
-      return add(
-        Object.assign({}, node, {
-          type: "image",
-          alt: content
-        })
-      );
+      return add({
+        type: "image",
+        url: node.redactionData.url,
+        alt: content
+      });
     };
   }
 
-  redact = Parser.prototype.options.redact;
-  tokenizeLink = tokenizers.link;
-  tokenizeAutoLink = tokenizers.autoLink;
-
-  tokenizeRedactedLink.locator = tokenizers.link.locator;
-  tokenizers.redactedLink = tokenizeRedactedLink;
-
-  tokenizeRedactedAutoLink.locator = tokenizers.autoLink.locator;
-  tokenizers.redactedAutoLink = tokenizeRedactedAutoLink;
-
-  // If in redacted mode, run this instead of original link tokenizer. If
-  // running regularly, do nothing special.
-  if (redact) {
-    methods.splice(methods.indexOf("link"), 1, "redactedLink");
-    methods.splice(methods.indexOf("autoLink"), 1, "redactedAutoLink");
+  // If in redacted mode, run this instead of original link and autolink
+  // tokenizers. If running regularly, do nothing special.
+  if (!Parser.prototype.options.redact) {
+    return;
   }
+
+  const tokenizers = Parser.prototype.inlineTokenizers;
+
+  // override links
+  const originalLinkTokenizer = tokenizers.link;
+  tokenizers.link = function (eat, value, silent) {
+    const link = originalLinkTokenizer.call(this, eat, value, silent);
+    if (!link) {
+      return;
+    }
+
+    if (link.type === "link") {
+      redactLink(link);
+    } else if (link.type === "image") {
+      redactImage(link);
+    }
+  };
+  tokenizers.link.locator = originalLinkTokenizer.locator;
+
+  // override autolinks
+  const originalAutoLinkTokenizer = tokenizers.autoLink;
+  tokenizers.autoLink = function (eat, value, silent) {
+    const autoLink = originalAutoLinkTokenizer.call(this, eat, value, silent);
+    if (autoLink) {
+      redactLink(autoLink)
+    }
+  }
+  tokenizers.autoLink.locator = originalAutoLinkTokenizer.locator;
 };
 
-function tokenizeRedactedLink(eat, value, silent) {
-  const link = tokenizeLink.call(this, eat, value, silent);
-  if (link) {
-    if (link.type === "image") {
-      link.redactionContent = [
-        {
-          type: "text",
-          value: link.alt || ""
-        }
-      ];
-      delete link.alt;
-    } else {
-      link.redactionContent = link.children;
-      delete link.children;
-    }
-    link.redactionType = link.type;
-    link.type = "inlineRedaction";
-  }
+function redactLink(node) {
+  node.redactionType = node.type;
+  node.type = "inlineRedaction";
 
-  return link;
+  node.redactionData = {
+    url: node.url,
+    title: node.title
+  };
+  delete node.url;
+  delete node.title;
+
+  node.redactionContent = node.children;
+  delete node.children;
 }
 
-function tokenizeRedactedAutoLink(eat, value, silent) {
-  const link = tokenizeAutoLink.call(this, eat, value, silent);
-  if (link) {
-    link.redactionType = "link";
-    link.type = "inlineRedaction";
-    link.redactionContent = link.children;
-    delete link.children;
-  }
+function redactImage(node) {
+  node.redactionType = node.type;
+  node.type = "inlineRedaction";
 
-  return link;
+  node.redactionData = {
+    url: node.url
+  };
+  delete node.url;
+
+  node.redactionContent = [
+    {
+      type: "text",
+      value: node.alt || ""
+    }
+  ];
+  delete node.alt;
 }

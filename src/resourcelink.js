@@ -29,7 +29,7 @@ module.exports.restorationMethods = {
   resourcelink: function(node) {
     return {
       type: 'rawtext',
-      value: `[r ${node.redactionData}]`,
+      value: `[r ${node.redactionData}]`
     };
   }
 };
@@ -54,13 +54,13 @@ function tokenizeResourcelink(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: slug,
-        },
-      ],
+          value: slug
+        }
+      ]
     });
   }
 }
 
 function locateResourcelink(value, fromIndex) {
-  return value.indexOf('[r ', fromIndex);
+  return value.indexOf("[r ", fromIndex);
 }

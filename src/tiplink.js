@@ -40,31 +40,31 @@ function createTiplink(add, tipType, tipLink) {
     children: [],
     data: {
       hProperties: {
-        className: `tiplink tiplink-${tipType}`,
-      },
-    },
+        className: `tiplink tiplink-${tipType}`
+      }
+    }
   };
 
   let icon;
   if (tipType == 'tip') {
-    icon = 'lightbulb-o';
+    icon = "lightbulb-o";
   } else if (tipType == 'discussion') {
-    icon = 'comments';
+    icon = "comments";
   } else if (tipType == 'assessment') {
-    icon = 'check-circle';
+    icon = "check-circle";
   } else if (tipType == 'content') {
-    icon = 'mortar-board';
+    icon = "mortar-board";
   } else {
-    icon = 'warning';
+    icon = "warning";
   }
 
   const child = add(
     {
       type: 'link',
       url: `#${tipType}_${tipLink}`,
-      children: [],
+      children: []
     },
-    element,
+    element
   );
 
   add(
@@ -74,11 +74,11 @@ function createTiplink(add, tipType, tipLink) {
       data: {
         hName: 'i',
         hProperties: {
-          className: `fa fa-${icon}`,
-        },
-      },
+          className: `fa fa-${icon}`
+        }
+      }
     },
-    child,
+    child
   );
 
   return add(element);
@@ -102,8 +102,8 @@ function tokenizeTiplink(eat, value, silent) {
         redactionType: 'tiplink',
         redactionData: {
           tipType,
-          tipLink,
-        },
+          tipLink
+        }
       });
     }
 

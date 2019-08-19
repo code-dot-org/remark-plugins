@@ -139,11 +139,11 @@ function tokenizeDivclass(eat, value, silent) {
 
   const MATCHING_DIVCLASS_OPEN_RE = new RegExp(
     `\\[${className}\\] *\\n *\\n`,
-    'g'
+    "g"
   );
   const MATCHING_DIVCLASS_CLOSE_RE = new RegExp(
     `\\n *\\n *\\[\\/${className}\\]`,
-    'g'
+    "g"
   );
 
   MATCHING_DIVCLASS_CLOSE_RE.lastIndex = startIndex;
@@ -187,15 +187,15 @@ function tokenizeDivclass(eat, value, silent) {
 
   if (redact) {
     return add({
-      type: 'blockRedaction',
+      type: "blockRedaction",
       children: contents,
       redactionData: className,
-      redactionType: 'divclass'
+      redactionType: "divclass"
     });
   }
 
   return add({
-    type: 'div',
+    type: "div",
     children: contents,
     data: {
       hProperties: {

@@ -48,9 +48,9 @@ module.exports.restorationMethods = {
       children: [
         {
           type: 'rawtext',
-          value: `${colon.repeat(colonCount)} details [${content}]`,
-        },
-      ],
+          value: `${colon.repeat(colonCount)} details [${content}]`
+        }
+      ]
     };
 
     const childNodes = children;
@@ -60,9 +60,9 @@ module.exports.restorationMethods = {
       children: [
         {
           type: 'rawtext',
-          value: colon.repeat(colonCount),
-        },
-      ],
+          value: colon.repeat(colonCount)
+        }
+      ]
     };
 
     return [open, ...childNodes, close];
@@ -193,24 +193,24 @@ function tokenizeDetails(eat, value, silent) {
       children: body,
       redactionType: 'details',
       redactionContent: summary,
-      redactionData: openingColonCount,
+      redactionData: openingColonCount
     });
   }
 
   return add({
     type: 'details',
     data: {
-      hName: 'details',
+      hName: 'details'
     },
     children: [
       {
         type: 'summary',
         data: {
-          hName: 'summary',
+          hName: 'summary'
         },
-        children: summary,
-      },
-    ].concat(body),
+        children: summary
+      }
+    ].concat(body)
   });
 }
 

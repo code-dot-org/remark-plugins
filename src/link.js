@@ -72,7 +72,7 @@ module.exports = function redactedLink() {
 
 function redactLink(node) {
   node.redactionType = node.type;
-  node.type = 'inlineRedaction';
+  node.type = "inlineRedaction";
 
   node.redactionData = {
     url: node.url,
@@ -87,7 +87,7 @@ function redactLink(node) {
 
 function redactImage(node) {
   node.redactionType = node.type;
-  node.type = 'inlineRedaction';
+  node.type = "inlineRedaction";
 
   node.redactionData = {
     url: node.url
@@ -96,8 +96,8 @@ function redactImage(node) {
 
   node.redactionContent = [
     {
-      type: 'text',
-      value: node.alt || ''
+      type: "text",
+      value: node.alt || ""
     }
   ];
   delete node.alt;

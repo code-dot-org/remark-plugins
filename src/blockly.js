@@ -19,7 +19,7 @@ module.exports.restorationMethods = {
   blockly: function(node) {
     return {
       type: 'rawtext',
-      value: node.redactionData,
+      value: node.redactionData
     };
   }
 };
@@ -68,9 +68,9 @@ function tokenizeBlockly(eat, value, silent) {
     redactionContent: [
       {
         type: 'text',
-        value: 'blockly block',
-      },
-    ],
+        value: 'blockly block'
+      }
+    ]
   });
 }
 tokenizeBlockly.notInLink = true;

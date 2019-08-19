@@ -60,9 +60,9 @@ function tokenizeVocablink(eat, value, silent) {
         redactionContent: [
           {
             type: 'text',
-            value: override || vocabword,
-          },
-        ],
+            value: override || vocabword
+          }
+        ]
       });
     }
 
@@ -71,7 +71,7 @@ function tokenizeVocablink(eat, value, silent) {
     // to the raw string
     return add({
       type: 'rawtext',
-      value: match[0],
+      value: match[0]
     });
   }
 }

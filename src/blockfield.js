@@ -19,7 +19,7 @@ module.exports.restorationMethods = {
   blockfield: function(node) {
     return {
       type: 'rawtext',
-      value: `{${node.redactionData}}`,
+      value: `{${node.redactionData}}`
     };
   }
 };
@@ -44,13 +44,13 @@ function tokenizeResourcelink(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: slug,
-        },
-      ],
+          value: slug
+        }
+      ]
     });
   }
 }
 
 function locateResourcelink(value, fromIndex) {
-  return value.indexOf('{', fromIndex);
+  return value.indexOf("{", fromIndex);
 }

@@ -65,11 +65,11 @@ function tokenizeTip(eat, value, silent) {
   let index = match[0].length;
   while (index < value.length) {
     index++;
-    if (value.charAt(index) === '\n') {
-      if (value.charAt(index + 1) !== '\n') {
+    if (value.charAt(index) === "\n") {
+      if (value.charAt(index + 1) !== "\n") {
         let nextLine = value.slice(index + 1, index + 5);
-        nextLine = nextLine.replace('\t', '    ');
-        if (!nextLine.startsWith('    ')) {
+        nextLine = nextLine.replace("\t", "    ");
+        if (!nextLine.startsWith("    ")) {
           break;
         }
       }
@@ -77,7 +77,7 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || '';
+  const title = match[2] || "";
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
@@ -105,41 +105,41 @@ function tokenizeTip(eat, value, silent) {
   }
 
   return add({
-    type: 'div',
+    type: "div",
     children: [
       {
-        type: 'paragraph',
+        type: "paragraph",
         children: [
           {
-            type: 'emphasis',
+            type: "emphasis",
             children: [],
             data: {
               hName: 'i',
               hProperties: {
-                className: 'fa fa-lightbulb-o'
+                className: "fa fa-lightbulb-o"
               }
             }
           },
           {
-            type: 'text',
+            type: "text",
             value: title
           }
         ],
         data: {
           hProperties: {
-            className: 'admonition-title',
+            className: "admonition-title",
             id: id && `tip_${id}`
           }
         }
       },
       {
-        type: 'div',
+        type: "div",
         children
       }
     ],
     data: {
       hProperties: {
-        className: 'admonition tip'
+        className: "admonition tip"
       }
     }
   });

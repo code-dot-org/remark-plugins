@@ -16,7 +16,7 @@ module.exports = function blockly() {
 };
 
 module.exports.restorationMethods = {
-  blockly: function(node) {
+  [BLOCKLY]: function(node) {
     return {
       type: 'rawtext',
       value: node.redactionData

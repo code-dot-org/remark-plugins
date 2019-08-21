@@ -24,6 +24,8 @@ const newline = '\n';
 const space = ' ';
 const tab = '\t';
 
+const DETAILS = 'details';
+
 let redact;
 
 module.exports = function details() {
@@ -36,12 +38,12 @@ module.exports = function details() {
     tokenizers.details = tokenizeDetails;
 
     /* Run it just before `paragraph`. */
-    methods.splice(methods.indexOf('paragraph'), 0, 'details');
+    methods.splice(methods.indexOf('paragraph'), 0, DETAILS);
   }
 };
 
 module.exports.restorationMethods = {
-  details: function(node, content, children) {
+  [DETAILS]: function(node, content, children) {
     const colonCount = node.redactionData;
     const open = {
       type: 'paragraph',

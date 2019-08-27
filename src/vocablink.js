@@ -43,7 +43,7 @@ module.exports = function vocablink() {
 };
 
 module.exports.restorationMethods = {
-  vocablink: function(node, content) {
+  [VOCABLINK]: function(node, content) {
     let value = `[v ${node.redactionData}]`;
     if (content) {
       value += `[${content}]`;

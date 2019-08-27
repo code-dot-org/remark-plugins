@@ -2,6 +2,7 @@ let redact;
 
 const TIPLINK_RE = /^([\w-]+)!!! ?([\w-]+)?/;
 const TIPLINK_LOCATOR_RE = /[\w-]+!!!/;
+const TIPLINK = 'tiplink';
 
 /**
  * @requires restorationRegistration
@@ -14,7 +15,7 @@ module.exports = function mention() {
     const restorationMethods = Parser.prototype.restorationMethods;
 
     if (restorationMethods) {
-      restorationMethods.tiplink = function(add, node) {
+      restorationMethods[TIPLINK] = function(add, node) {
         return add({
           type: 'text',
           value: `${node.redactionData.tipType}!!! ${
@@ -27,15 +28,15 @@ module.exports = function mention() {
     redact = Parser.prototype.options.redact;
 
     /* Add an inline tokenizer (defined in the following example). */
-    tokenizers.tiplink = tokenizeTiplink;
+    tokenizers[TIPLINK] = tokenizeTiplink;
 
     /* Run it just before `text`. */
-    methods.splice(methods.indexOf('text'), 0, 'tiplink');
+    methods.splice(methods.indexOf('text'), 0, TIPLINK);
   }
 };
 
 module.exports.restorationMethods = {
-  tiplink: function(node) {
+  [TIPLINK]: function(node) {
     return {
       type: 'text',
       value: `${node.redactionData.tipType}!!! ${node.redactionData.tipLink}`

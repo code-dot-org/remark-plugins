@@ -25,7 +25,7 @@ module.exports = function blockfield() {
 };
 
 module.exports.restorationMethods = {
-  blockfield: function(node) {
+  [BLOCKFIELD]: function(node) {
     return {
       type: 'rawtext',
       value: `{${node.redactionData}}`,

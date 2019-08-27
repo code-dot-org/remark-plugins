@@ -35,7 +35,7 @@ module.exports = function resourcelink() {
 };
 
 module.exports.restorationMethods = {
-  resourcelink: function(node) {
+  [RESOURCELINK]: function(node) {
     return {
       type: 'rawtext',
       value: `[r ${node.redactionData}]`,

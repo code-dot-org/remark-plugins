@@ -65,6 +65,7 @@
  */
 
 const DIVCLASS_OPEN_RE = /^\[([\w-]+)\] *\n *\n/;
+const DIVCLASS = 'divclass';
 
 let redact;
 
@@ -121,11 +122,11 @@ module.exports = function divclass() {
   tokenizers.divclass = tokenizeDivclass;
 
   /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf("paragraph"), 0, "divclass");
+  methods.splice(methods.indexOf("paragraph"), 0, DIVCLASS);
 };
 
 module.exports.restorationMethods = {
-  divclass: function(node, content, children) {
+  [DIVCLASS]: function(node, content, children) {
     const open = {
       type: "paragraph",
       children: [

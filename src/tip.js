@@ -3,6 +3,7 @@ let redact;
 const removeIndentation = require('remark-parse/lib/util/remove-indentation');
 
 const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/;
+const TIP = 'tip';
 
 module.exports = function tip() {
   const Parser = this.Parser;
@@ -11,7 +12,7 @@ module.exports = function tip() {
   const restorationMethods = Parser.prototype.restorationMethods;
 
   if (restorationMethods) {
-    restorationMethods.tip = function(add, node, content, children) {
+    restorationMethods[TIP] = function(add, node, content, children) {
       let value = `!!!${node.redactionData.tipType}`;
       if (content) {
         value += ` "${content}"`;
@@ -37,14 +38,14 @@ module.exports = function tip() {
 
   redact = Parser.prototype.options.redact;
 
-  tokenizers.tip = tokenizeTip;
+  tokenizers[TIP] = tokenizeTip;
 
   /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, 'tip');
+  methods.splice(methods.indexOf('paragraph'), 0, TIP);
 };
 
 module.exports.restorationMethods = {
-  tip: function(node, content, children) {
+  [TIP]: function(node, content, children) {
     let value = `!!!${node.redactionData.tipType}`;
     if (content) {
       value += ` "${content}"`;

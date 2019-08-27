@@ -24,6 +24,8 @@ const newline = '\n';
 const space = ' ';
 const tab = '\t';
 
+const DETAILS = 'details';
+
 let redact;
 
 module.exports = function details() {
@@ -40,9 +42,9 @@ module.exports = function details() {
         children: [
           {
             type: 'rawtext',
-            value: `${colon.repeat(colonCount)} details [${content}]`
-          }
-        ]
+            value: `${colon.repeat(colonCount)} details [${content}]`,
+          },
+        ],
       });
 
       const childNodes = children.map(child => add(child));
@@ -52,9 +54,9 @@ module.exports = function details() {
         children: [
           {
             type: 'rawtext',
-            value: colon.repeat(colonCount)
-          }
-        ]
+            value: colon.repeat(colonCount),
+          },
+        ],
       });
 
       return [open, ...childNodes, close];
@@ -64,7 +66,36 @@ module.exports = function details() {
   tokenizers.details = tokenizeDetails;
 
   /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, 'details');
+  methods.splice(methods.indexOf('paragraph'), 0, DETAILS);
+};
+
+module.exports.restorationMethods = {
+  [DETAILS]: function(node, content, children) {
+    const colonCount = node.redactionData;
+    const open = {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'rawtext',
+          value: `${colon.repeat(colonCount)} details [${content}]`,
+        },
+      ],
+    };
+
+    const childNodes = children;
+
+    const close = {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'rawtext',
+          value: colon.repeat(colonCount),
+        },
+      ],
+    };
+
+    return [open, ...childNodes, close];
+  }
 };
 
 function tokenizeDetails(eat, value, silent) {
@@ -191,24 +222,24 @@ function tokenizeDetails(eat, value, silent) {
       children: body,
       redactionType: 'details',
       redactionContent: summary,
-      redactionData: openingColonCount
+      redactionData: openingColonCount,
     });
   }
 
   return add({
     type: 'details',
     data: {
-      hName: 'details'
+      hName: 'details',
     },
     children: [
       {
         type: 'summary',
         data: {
-          hName: 'summary'
+          hName: 'summary',
         },
-        children: summary
-      }
-    ].concat(body)
+        children: summary,
+      },
+    ].concat(body),
   });
 }
 

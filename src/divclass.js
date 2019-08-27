@@ -65,6 +65,7 @@
  */
 
 const DIVCLASS_OPEN_RE = /^\[([\w-]+)\] *\n *\n/;
+const DIVCLASS = 'divclass';
 
 let redact;
 
@@ -121,7 +122,48 @@ module.exports = function divclass() {
   tokenizers.divclass = tokenizeDivclass;
 
   /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf("paragraph"), 0, "divclass");
+  methods.splice(methods.indexOf("paragraph"), 0, DIVCLASS);
+};
+
+module.exports.restorationMethods = {
+  [DIVCLASS]: function(node, content, children) {
+    const open = {
+      type: "paragraph",
+      children: [
+        {
+          type: "rawtext", // use rawtext rather than text to avoid escaping the `[`
+          value: `[${node.redactionData}]`
+        }
+      ]
+    };
+
+    // Restored divclasses must always have a child; otherwise, an empty
+    // restored divclass would look like `[classname]\n\n[/classname]` which is
+    // not recognized by the parser.
+    // See the test "divclass render works without content - but only if separated by FOUR newlines".
+    // If the parser can be taught to reliably recognize a divclass without that
+    // requirement, this step can be removed
+    if (!(children && children.length)) {
+      children = [
+        {
+          type: "text",
+          value: ""
+        }
+      ];
+    }
+
+    const close = {
+      type: "paragraph",
+      children: [
+        {
+          type: "rawtext",
+          value: `[/${node.redactionData}]`
+        }
+      ]
+    };
+
+    return [open, ...children, close];
+  }
 };
 
 tokenizeDivclass.notInLink = true;

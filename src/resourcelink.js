@@ -20,19 +20,28 @@ module.exports = function resourcelink() {
     Parser.prototype.inlineTokenizers[RESOURCELINK] = tokenizeResourcelink;
 
     if (Parser.prototype.restorationMethods) {
-      Parser.prototype.restorationMethods[RESOURCELINK] = function (add, node) {
+      Parser.prototype.restorationMethods[RESOURCELINK] = function(add, node) {
         return add({
           type: 'rawtext',
-          value: `[r ${node.redactionData}]`
+          value: `[r ${node.redactionData}]`,
         });
-      }
+      };
     }
 
     // Run it just before `html`
     const methods = Parser.prototype.inlineMethods;
     methods.splice(methods.indexOf('html'), 0, RESOURCELINK);
   }
-}
+};
+
+module.exports.restorationMethods = {
+  [RESOURCELINK]: function(node) {
+    return {
+      type: 'rawtext',
+      value: `[r ${node.redactionData}]`,
+    };
+  }
+};
 
 tokenizeResourcelink.notInLink = true;
 tokenizeResourcelink.locator = locateResourcelink;
@@ -51,14 +60,16 @@ function tokenizeResourcelink(eat, value, silent) {
       type: 'inlineRedaction',
       redactionType: RESOURCELINK,
       redactionData: slug,
-      redactionContent: [{
-        type: 'text',
-        value: slug
-      }]
+      redactionContent: [
+        {
+          type: 'text',
+          value: slug,
+        },
+      ],
     });
   }
 }
 
 function locateResourcelink(value, fromIndex) {
-  return value.indexOf("[r ", fromIndex);
+  return value.indexOf('[r ', fromIndex);
 }

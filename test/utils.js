@@ -2,7 +2,7 @@ const unified = require('unified');
 const stringify = require('remark-stringify');
 const markdown = require('remark-parse');
 const html = require('remark-html');
-const {redact, restore, parseRestorations} = require('remark-redactable');
+const {redact, restore, parseRestorations, renderRestorations} = require('remark-redactable');
 const rawtext = require('../src/rawtext');
 
 module.exports.markdownToSyntaxTree = (source, plugin = null) =>
@@ -55,6 +55,7 @@ module.exports.sourceAndRedactedToRestored = (
   return unified()
     .use(stringify)
     .use(rawtext)
+    .use(renderRestorations)
     .use(plugin)
     .stringify(mergedTree);
 };

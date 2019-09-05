@@ -20,7 +20,7 @@ module.exports = function mention() {
           type: 'text',
           value: `${node.redactionData.tipType}!!! ${
             node.redactionData.tipLink
-          }`,
+          }`
         });
       };
     }
@@ -53,9 +53,9 @@ function createTiplink(add, tipType, tipLink) {
     children: [],
     data: {
       hProperties: {
-        className: `tiplink tiplink-${tipType}`,
-      },
-    },
+        className: `tiplink tiplink-${tipType}`
+      }
+    }
   };
 
   let icon;
@@ -75,9 +75,9 @@ function createTiplink(add, tipType, tipLink) {
     {
       type: 'link',
       url: `#${tipType}_${tipLink}`,
-      children: [],
+      children: []
     },
-    element,
+    element
   );
 
   add(
@@ -87,11 +87,11 @@ function createTiplink(add, tipType, tipLink) {
       data: {
         hName: 'i',
         hProperties: {
-          className: `fa fa-${icon}`,
-        },
-      },
+          className: `fa fa-${icon}`
+        }
+      }
     },
-    child,
+    child
   );
 
   return add(element);
@@ -115,8 +115,8 @@ function tokenizeTiplink(eat, value, silent) {
         redactionType: 'tiplink',
         redactionData: {
           tipType,
-          tipLink,
-        },
+          tipLink
+        }
       });
     }
 

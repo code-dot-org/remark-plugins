@@ -13,7 +13,7 @@ module.exports = function blockfield() {
       Parser.prototype.restorationMethods[BLOCKFIELD] = function(add, node) {
         return add({
           type: 'rawtext',
-          value: `{${node.redactionData}}`,
+          value: `{${node.redactionData}}`
         });
       };
     }
@@ -28,7 +28,7 @@ module.exports.restorationMethods = {
   [BLOCKFIELD]: function(node) {
     return {
       type: 'rawtext',
-      value: `{${node.redactionData}}`,
+      value: `{${node.redactionData}}`
     };
   }
 };
@@ -53,9 +53,9 @@ function tokenizeResourcelink(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: slug,
-        },
-      ],
+          value: slug
+        }
+      ]
     });
   }
 }

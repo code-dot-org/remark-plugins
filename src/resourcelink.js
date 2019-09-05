@@ -23,7 +23,7 @@ module.exports = function resourcelink() {
       Parser.prototype.restorationMethods[RESOURCELINK] = function(add, node) {
         return add({
           type: 'rawtext',
-          value: `[r ${node.redactionData}]`,
+          value: `[r ${node.redactionData}]`
         });
       };
     }
@@ -38,7 +38,7 @@ module.exports.restorationMethods = {
   [RESOURCELINK]: function(node) {
     return {
       type: 'rawtext',
-      value: `[r ${node.redactionData}]`,
+      value: `[r ${node.redactionData}]`
     };
   }
 };
@@ -63,9 +63,9 @@ function tokenizeResourcelink(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: slug,
-        },
-      ],
+          value: slug
+        }
+      ]
     });
   }
 }

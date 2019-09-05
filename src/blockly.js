@@ -11,7 +11,7 @@ module.exports = function blockly() {
       Parser.prototype.restorationMethods[BLOCKLY] = function(add, node) {
         return add({
           type: 'rawtext',
-          value: node.redactionData,
+          value: node.redactionData
         });
       };
     }
@@ -28,7 +28,7 @@ module.exports.restorationMethods = {
   [BLOCKLY]: function(node) {
     return {
       type: 'rawtext',
-      value: node.redactionData,
+      value: node.redactionData
     };
   }
 };
@@ -77,9 +77,9 @@ function tokenizeBlockly(eat, value, silent) {
     redactionContent: [
       {
         type: 'text',
-        value: 'blockly block',
-      },
-    ],
+        value: 'blockly block'
+      }
+    ]
   });
 }
 tokenizeBlockly.notInLink = true;

@@ -34,34 +34,6 @@ module.exports = function details() {
   const methods = Parser.prototype.blockMethods;
   const restorationMethods = Parser.prototype.restorationMethods;
 
-  if (restorationMethods) {
-    restorationMethods.details = function(add, node, content, children) {
-      const colonCount = node.redactionData;
-      const open = add({
-        type: 'paragraph',
-        children: [
-          {
-            type: 'rawtext',
-            value: `${colon.repeat(colonCount)} details [${content}]`
-          }
-        ]
-      });
-
-      const childNodes = children.map(child => add(child));
-
-      const close = add({
-        type: 'paragraph',
-        children: [
-          {
-            type: 'rawtext',
-            value: colon.repeat(colonCount)
-          }
-        ]
-      });
-
-      return [open, ...childNodes, close];
-    };
-  }
   redact = Parser.prototype.options.redact;
   tokenizers.details = tokenizeDetails;
 

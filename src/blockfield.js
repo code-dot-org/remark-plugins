@@ -9,15 +9,6 @@ module.exports = function blockfield() {
     redact = Parser.prototype.options.redact;
     Parser.prototype.inlineTokenizers[BLOCKFIELD] = tokenizeResourcelink;
 
-    if (Parser.prototype.restorationMethods) {
-      Parser.prototype.restorationMethods[BLOCKFIELD] = function(add, node) {
-        return add({
-          type: 'rawtext',
-          value: `{${node.redactionData}}`
-        });
-      };
-    }
-
     // Run it just before `html`.
     const methods = Parser.prototype.inlineMethods;
     methods.splice(methods.indexOf('html'), 0, BLOCKFIELD);

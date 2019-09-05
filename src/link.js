@@ -34,30 +34,6 @@ module.exports = function redactedLink() {
   const Parser = this.Parser;
   const restorationMethods = Parser.prototype.restorationMethods;
 
-  if (restorationMethods) {
-    restorationMethods.link = function(add, node, content) {
-      return add({
-        type: 'link',
-        url: node.redactionData.url,
-        title: node.redactionData.title,
-        children: [
-          {
-            type: 'text',
-            value: content
-          }
-        ]
-      });
-    };
-
-    restorationMethods.image = function(add, node, content) {
-      return add({
-        type: 'image',
-        url: node.redactionData.url,
-        alt: content
-      });
-    };
-  }
-
   // If in redacted mode, run this instead of original link and autolink
   // tokenizers. If running regularly, do nothing special.
   if (!Parser.prototype.options.redact) {

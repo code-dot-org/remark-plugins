@@ -14,17 +14,6 @@ module.exports = function mention() {
     const methods = Parser.prototype.inlineMethods;
     const restorationMethods = Parser.prototype.restorationMethods;
 
-    if (restorationMethods) {
-      restorationMethods[TIPLINK] = function(add, node) {
-        return add({
-          type: 'text',
-          value: `${node.redactionData.tipType}!!! ${
-            node.redactionData.tipLink
-          }`
-        });
-      };
-    }
-
     redact = Parser.prototype.options.redact;
 
     /* Add an inline tokenizer (defined in the following example). */

@@ -25,13 +25,13 @@ module.exports = function tip() {
         children: [
           {
             type: 'rawtext',
-            value: value + '\n',
+            value: value + '\n'
           },
           {
             type: 'indent',
-            children,
-          },
-        ],
+            children
+          }
+        ]
       });
     };
   }
@@ -58,11 +58,11 @@ module.exports.restorationMethods = {
       children: [
         {
           type: 'rawtext',
-          value: value + '\n',
+          value: value + '\n'
         },
         {
           type: 'indent',
-          children,
+          children
         }
       ]
     };
@@ -106,7 +106,7 @@ function tokenizeTip(eat, value, silent) {
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
     removeIndentation(subvalue, 4),
-    eat.now(),
+    eat.now()
   );
   const add = eat(match[0] + subvalue);
 
@@ -118,13 +118,13 @@ function tokenizeTip(eat, value, silent) {
       redactionContent: [
         {
           type: 'text',
-          value: title,
-        },
+          value: title
+        }
       ],
       redactionData: {
         id,
-        tipType,
-      },
+        tipType
+      }
     });
   }
 
@@ -140,31 +140,31 @@ function tokenizeTip(eat, value, silent) {
             data: {
               hName: 'i',
               hProperties: {
-                className: 'fa fa-lightbulb-o',
-              },
-            },
+                className: 'fa fa-lightbulb-o'
+              }
+            }
           },
           {
             type: 'text',
-            value: title,
-          },
+            value: title
+          }
         ],
         data: {
           hProperties: {
             className: 'admonition-title',
-            id: id && `tip_${id}`,
-          },
-        },
+            id: id && `tip_${id}`
+          }
+        }
       },
       {
         type: 'div',
-        children,
-      },
+        children
+      }
     ],
     data: {
       hProperties: {
-        className: 'admonition tip',
-      },
-    },
+        className: 'admonition tip'
+      }
+    }
   });
 }

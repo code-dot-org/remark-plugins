@@ -78,10 +78,10 @@ module.exports = function divclass() {
   if (restorationMethods) {
     restorationMethods.divclass = function(add, node, content, children) {
       const open = add({
-        type: "paragraph",
+        type: 'paragraph',
         children: [
           {
-            type: "rawtext", // use rawtext rather than text to avoid escaping the `[`
+            type: 'rawtext', // use rawtext rather than text to avoid escaping the `[`
             value: `[${node.redactionData}]`
           }
         ]
@@ -96,18 +96,18 @@ module.exports = function divclass() {
       if (!(children && children.length)) {
         children = [
           {
-            type: "text",
-            value: ""
+            type: 'text',
+            value: ''
           }
         ];
       }
       const childNodes = children.map(child => add(child));
 
       const close = add({
-        type: "paragraph",
+        type: 'paragraph',
         children: [
           {
-            type: "rawtext",
+            type: 'rawtext',
             value: `[/${node.redactionData}]`
           }
         ]
@@ -122,16 +122,16 @@ module.exports = function divclass() {
   tokenizers.divclass = tokenizeDivclass;
 
   /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf("paragraph"), 0, DIVCLASS);
+  methods.splice(methods.indexOf('paragraph'), 0, DIVCLASS);
 };
 
 module.exports.restorationMethods = {
   [DIVCLASS]: function(node, content, children) {
     const open = {
-      type: "paragraph",
+      type: 'paragraph',
       children: [
         {
-          type: "rawtext", // use rawtext rather than text to avoid escaping the `[`
+          type: 'rawtext', // use rawtext rather than text to avoid escaping the `[`
           value: `[${node.redactionData}]`
         }
       ]
@@ -146,17 +146,17 @@ module.exports.restorationMethods = {
     if (!(children && children.length)) {
       children = [
         {
-          type: "text",
-          value: ""
+          type: 'text',
+          value: ''
         }
       ];
     }
 
     const close = {
-      type: "paragraph",
+      type: 'paragraph',
       children: [
         {
-          type: "rawtext",
+          type: 'rawtext',
           value: `[/${node.redactionData}]`
         }
       ]
@@ -181,11 +181,11 @@ function tokenizeDivclass(eat, value, silent) {
 
   const MATCHING_DIVCLASS_OPEN_RE = new RegExp(
     `\\[${className}\\] *\\n *\\n`,
-    "g"
+    'g'
   );
   const MATCHING_DIVCLASS_CLOSE_RE = new RegExp(
     `\\n *\\n *\\[\\/${className}\\]`,
-    "g"
+    'g'
   );
 
   MATCHING_DIVCLASS_CLOSE_RE.lastIndex = startIndex;
@@ -229,15 +229,15 @@ function tokenizeDivclass(eat, value, silent) {
 
   if (redact) {
     return add({
-      type: "blockRedaction",
+      type: 'blockRedaction',
       children: contents,
       redactionData: className,
-      redactionType: "divclass"
+      redactionType: 'divclass'
     });
   }
 
   return add({
-    type: "div",
+    type: 'div',
     children: contents,
     data: {
       hProperties: {

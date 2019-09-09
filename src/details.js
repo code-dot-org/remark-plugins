@@ -30,43 +30,16 @@ let redact;
 
 module.exports = function details() {
   const Parser = this.Parser;
-  const tokenizers = Parser.prototype.blockTokenizers;
-  const methods = Parser.prototype.blockMethods;
-  const restorationMethods = Parser.prototype.restorationMethods;
+  if (Parser) {
+    const tokenizers = Parser.prototype.blockTokenizers;
+    const methods = Parser.prototype.blockMethods;
 
-  if (restorationMethods) {
-    restorationMethods.details = function(add, node, content, children) {
-      const colonCount = node.redactionData;
-      const open = add({
-        type: 'paragraph',
-        children: [
-          {
-            type: 'rawtext',
-            value: `${colon.repeat(colonCount)} details [${content}]`
-          }
-        ]
-      });
+    redact = Parser.prototype.options.redact;
+    tokenizers.details = tokenizeDetails;
 
-      const childNodes = children.map(child => add(child));
-
-      const close = add({
-        type: 'paragraph',
-        children: [
-          {
-            type: 'rawtext',
-            value: colon.repeat(colonCount)
-          }
-        ]
-      });
-
-      return [open, ...childNodes, close];
-    };
+    /* Run it just before `paragraph`. */
+    methods.splice(methods.indexOf('paragraph'), 0, 'details');
   }
-  redact = Parser.prototype.options.redact;
-  tokenizers.details = tokenizeDetails;
-
-  /* Run it just before `paragraph`. */
-  methods.splice(methods.indexOf('paragraph'), 0, DETAILS);
 };
 
 module.exports.restorationMethods = {

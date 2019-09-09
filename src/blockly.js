@@ -7,15 +7,6 @@ module.exports = function blockly() {
     const Parser = this.Parser;
     redact = Parser.prototype.options.redact;
 
-    if (Parser.prototype.restorationMethods) {
-      Parser.prototype.restorationMethods[BLOCKLY] = function(add, node) {
-        return add({
-          type: 'rawtext',
-          value: node.redactionData
-        });
-      };
-    }
-
     ['inline', 'block'].forEach(type => {
       Parser.prototype[`${type}Tokenizers`][BLOCKLY] = tokenizeBlockly;
       const methods = Parser.prototype[`${type}Methods`];

@@ -97,7 +97,7 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || DEFAULT_TITLE[tipType] || "";
+  const title = match[2] || "";
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
@@ -139,7 +139,7 @@ function tokenizeTip(eat, value, silent) {
       },
       {
         type: "text",
-        value: title
+        value: title || DEFAULT_TITLE[tipType]
       }
     ],
     data: {

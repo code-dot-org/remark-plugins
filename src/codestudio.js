@@ -3,6 +3,29 @@ let redact;
 const CODESTUDIO_RE = /^(\[code-studio\s*)(\d+)?-?(\d+)?\]/;
 const CODESTUDIO = "codestudio";
 
+/**
+ * This plugin renders the special "codestudio" syntax used by
+ * CurriculumBuilder for the code studio pullthrough.
+ *
+ * Specifically, given syntax like `[code-studio]`, optionally with range
+ * parameters like `[code-studio 1]` or `[code-studio 3-5]`, it renders a div
+ * with the class "stage-guide" and the optional parameters included as data
+ * attributes.
+ *
+ * @example
+ *
+ *   const parse = require('remark-parse');
+ *   const stringify = require('remark-stringify');
+ *   const unified = require('unified');
+ *
+ *   const source = "Markdown containing [code-studio 1-2] syntax"
+ *   // returns: "<p>Markdown containing <div class="stage-guide" data-start="1" data-end="2"></div> syntax</p>"
+ *   unified().use([
+ *     parse,      // use the standard parser
+ *     codestudio, // use this extension
+ *     stringify,  // output back to markdown
+ *   ]).stringify(source);
+ */
 module.exports = function codestudio() {
   if (this.Parser) {
     const Parser = this.Parser;

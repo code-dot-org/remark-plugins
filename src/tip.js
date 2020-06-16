@@ -5,6 +5,25 @@ const removeIndentation = require("remark-parse/lib/util/remove-indentation");
 const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/;
 const TIP = "tip";
 
+const ICON_CLASS = {
+  tip: "fa fa-lightbulb-o",
+  discussion: "fa fa-comments",
+  slide: "fa fa-list-alt",
+  assessment: "fa fa-check-circle",
+  content: "fa fa-mortar-board",
+  say: "fa fa-microphone",
+  guide: "fa fa-pencil-square-o"
+};
+
+const DEFAULT_TITLE = {
+  tip: "Teaching Tip",
+  discussion: "Discussion Goal",
+  slide: "Slide",
+  assessment: "Assessment Opportunity",
+  content: "Content Corner",
+  say: "Remarks"
+};
+
 module.exports = function tip() {
   const Parser = this.Parser;
 
@@ -78,7 +97,7 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || "";
+  const title = match[2] || DEFAULT_TITLE[tipType] || "";
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
@@ -105,42 +124,38 @@ function tokenizeTip(eat, value, silent) {
     });
   }
 
-  return add({
-    type: "div",
+  children.unshift({
+    type: "paragraph",
     children: [
       {
-        type: "paragraph",
-        children: [
-          {
-            type: "emphasis",
-            children: [],
-            data: {
-              hName: "i",
-              hProperties: {
-                className: "fa fa-lightbulb-o"
-              }
-            }
-          },
-          {
-            type: "text",
-            value: title
-          }
-        ],
+        type: "emphasis",
+        children: [],
         data: {
+          hName: "i",
           hProperties: {
-            className: "admonition-title",
-            id: id && `tip_${id}`
+            className: ICON_CLASS[tipType]
           }
         }
       },
       {
-        type: "div",
-        children
+        type: "text",
+        value: title
       }
     ],
     data: {
       hProperties: {
-        className: "admonition tip"
+        className: "admonition-title",
+        id: `${tipType}_${id || 'None'}`
+      }
+    }
+  });
+
+  return add({
+    type: "div",
+    children,
+    data: {
+      hProperties: {
+        className: `admonition ${tipType}`
       }
     }
   });

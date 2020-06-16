@@ -1,28 +1,32 @@
 let redact;
 
-const CODESTUDIO_RE = /^(\[code-studio\s*)(\d+)?-?(\d+)?\]/
-const CODESTUDIO_LOCATOR_RE = /\[code-studio/;
-const CODESTUDIO = 'codestudio';
+const CODESTUDIO_RE = /^(\[code-studio\s*)(\d+)?-?(\d+)?\]/;
+const CODESTUDIO = "codestudio";
 
 module.exports = function codestudio() {
   if (this.Parser) {
     const Parser = this.Parser;
-    const tokenizers = Parser.prototype.inlineTokenizers;
-    const methods = Parser.prototype.inlineMethods;
-
     redact = Parser.prototype.options.redact;
-
-    tokenizers[CODESTUDIO] = tokenizeCodeStudio;
-    methods.unshift(CODESTUDIO);
+    Parser.prototype.inlineTokenizers[CODESTUDIO] = tokenizeCodeStudio;
+    Parser.prototype.inlineMethods.unshift(CODESTUDIO);
   }
 };
 
 module.exports.restorationMethods = {
   [CODESTUDIO]: function(node) {
-    throw "TODO: implement this"
+    let value = "[code-studio";
+
+    if (node.redactionData.start) {
+      value += " " + node.redactionData.start;
+      if (node.redactionData.end) {
+        value += "-" + node.redactionData.end;
+      }
+    }
+
+    value += "]";
     return {
-      type: 'text',
-      value: `${node.redactionData.tipType}!!! ${node.redactionData.tipLink}`
+      type: "rawtext",
+      value
     };
   }
 };
@@ -42,17 +46,25 @@ function tokenizeCodeStudio(eat, value, silent) {
   }
 
   const add = eat(match[0]);
-  const start = match[2]
-  const end = match[3]
+  const start = match[2];
+  const end = match[3];
+
+  if (redact) {
+    return add({
+      type: "inlineRedaction",
+      redactionType: CODESTUDIO,
+      redactionData: { start, end }
+    });
+  }
 
   return add({
-    type: 'div',
+    type: "div",
     data: {
       hProperties: {
-        className: 'stage-guide',
+        className: "stage-guide",
         dataStart: start,
-        dataEnd: end,
-      },
+        dataEnd: end
+      }
     }
   });
 }

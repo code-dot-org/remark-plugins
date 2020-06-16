@@ -11,15 +11,15 @@ const tiplink = require('../src/tiplink');
 
 const basicTipMarkdown = 'tip!!!';
 const basicTipHtml =
-  '<p class="tiplink tiplink-tip"><a href="#tip_undefined"><i class="fa fa-lightbulb-o"></i></a></p>';
+  '<span class="tiplink tiplink-tip"><a href="#tip_undefined"><i class="fa fa-lightbulb-o"></i></a></span>';
 
 const basicDiscussionMarkdown = 'discussion!!!';
 const basicDiscussionHtml =
-  '<p class="tiplink tiplink-discussion"><a href="#discussion_undefined"><i class="fa fa-comments"></i></a></p>';
+  '<span class="tiplink tiplink-discussion"><a href="#discussion_undefined"><i class="fa fa-comments"></i></a></span>';
 
 const labeledTipMarkdown = 'tip!!! tip-0';
 const labeledTipHtml =
-  '<p class="tiplink tiplink-tip"><a href="#tip_tip-0"><i class="fa fa-lightbulb-o"></i></a></p>';
+  '<span class="tiplink tiplink-tip"><a href="#tip_tip-0"><i class="fa fa-lightbulb-o"></i></a></span>';
 
 test('tiplink plugin renders basic tiplink', t => {
   t.plan(1);

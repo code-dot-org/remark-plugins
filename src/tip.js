@@ -1,9 +1,9 @@
 let redact;
 
-const removeIndentation = require('remark-parse/lib/util/remove-indentation');
+const removeIndentation = require("remark-parse/lib/util/remove-indentation");
 
 const RE = /^!!! ?([\w-]+)(?: "(.*?)")?(?: <(.*?)>)?\n/;
-const TIP = 'tip';
+const TIP = "tip";
 
 module.exports = function tip() {
   const Parser = this.Parser;
@@ -17,7 +17,7 @@ module.exports = function tip() {
     tokenizers.tip = tokenizeTip;
 
     /* Run it just before `paragraph`. */
-    methods.splice(methods.indexOf('paragraph'), 0, 'tip');
+    methods.splice(methods.indexOf("paragraph"), 0, "tip");
   }
 };
 
@@ -31,14 +31,14 @@ module.exports.restorationMethods = {
       value += ` <${node.redactionData.id}>`;
     }
     return {
-      type: 'paragraph',
+      type: "paragraph",
       children: [
         {
-          type: 'rawtext',
-          value: value + '\n'
+          type: "rawtext",
+          value: value + "\n"
         },
         {
-          type: 'indent',
+          type: "indent",
           children
         }
       ]
@@ -66,11 +66,11 @@ function tokenizeTip(eat, value, silent) {
   let index = match[0].length;
   while (index < value.length) {
     index++;
-    if (value.charAt(index) === '\n') {
-      if (value.charAt(index + 1) !== '\n') {
+    if (value.charAt(index) === "\n") {
+      if (value.charAt(index + 1) !== "\n") {
         let nextLine = value.slice(index + 1, index + 5);
-        nextLine = nextLine.replace('\t', '    ');
-        if (!nextLine.startsWith('    ')) {
+        nextLine = nextLine.replace("\t", "    ");
+        if (!nextLine.startsWith("    ")) {
           break;
         }
       }
@@ -78,7 +78,7 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || '';
+  const title = match[2] || "";
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
@@ -89,12 +89,12 @@ function tokenizeTip(eat, value, silent) {
 
   if (redact) {
     return add({
-      type: 'blockRedaction',
+      type: "blockRedaction",
       children,
-      redactionType: 'tip',
+      redactionType: "tip",
       redactionContent: [
         {
-          type: 'text',
+          type: "text",
           value: title
         }
       ],
@@ -106,41 +106,41 @@ function tokenizeTip(eat, value, silent) {
   }
 
   return add({
-    type: 'div',
+    type: "div",
     children: [
       {
-        type: 'paragraph',
+        type: "paragraph",
         children: [
           {
-            type: 'emphasis',
+            type: "emphasis",
             children: [],
             data: {
-              hName: 'i',
+              hName: "i",
               hProperties: {
-                className: 'fa fa-lightbulb-o'
+                className: "fa fa-lightbulb-o"
               }
             }
           },
           {
-            type: 'text',
+            type: "text",
             value: title
           }
         ],
         data: {
           hProperties: {
-            className: 'admonition-title',
+            className: "admonition-title",
             id: id && `tip_${id}`
           }
         }
       },
       {
-        type: 'div',
+        type: "div",
         children
       }
     ],
     data: {
       hProperties: {
-        className: 'admonition tip'
+        className: "admonition tip"
       }
     }
   });

@@ -40,6 +40,7 @@ function createTiplink(add, tipType, tipLink) {
     type: 'paragraph',
     children: [],
     data: {
+      hName: 'span',
       hProperties: {
         className: `tiplink tiplink-${tipType}`
       }

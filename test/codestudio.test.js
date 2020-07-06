@@ -14,7 +14,7 @@ test("codestudio can render", t => {
   t.plan(1);
   const input = "basic [code-studio] content";
   const output = markdownToHtml(input, codestudio);
-  t.equal(output, '<p>basic <div class="stage-guide"></div> content</p>\n');
+  t.equal(output, '<p>basic <div class="stage_guide"></div> content</p>\n');
 });
 
 test("codestudio can render with optional parameters", t => {
@@ -23,19 +23,19 @@ test("codestudio can render with optional parameters", t => {
   let output = markdownToHtml(input, codestudio);
   t.equal(
     output,
-    '<p>basic <div class="stage-guide" data-start="2"></div> content</p>\n'
+    '<p>basic <div class="stage_guide" data-start="2"></div> content</p>\n'
   );
   input = "basic [code-studio 2-5] content";
   output = markdownToHtml(input, codestudio);
   t.equal(
     output,
-    '<p>basic <div class="stage-guide" data-start="2" data-end="5"></div> content</p>\n'
+    '<p>basic <div class="stage_guide" data-start="2" data-end="5"></div> content</p>\n'
   );
   input = "basic [code-studio 12903-19293] content";
   output = markdownToHtml(input, codestudio);
   t.equal(
     output,
-    '<p>basic <div class="stage-guide" data-start="12903" data-end="19293"></div> content</p>\n'
+    '<p>basic <div class="stage_guide" data-start="12903" data-end="19293"></div> content</p>\n'
   );
 });
 
@@ -80,7 +80,7 @@ test("codestudio can restore back to html", t => {
   const source = "basic [code-studio] content";
   const redacted = "contenu [][0] de base\n";
   const output = sourceAndRedactedToHtml(source, redacted, codestudio);
-  t.equal(output, '<p>contenu <div class="stage-guide"></div> de base</p>\n');
+  t.equal(output, '<p>contenu <div class="stage_guide"></div> de base</p>\n');
 });
 
 test("codestudio can restore back to html with optional parameters", t => {
@@ -91,20 +91,20 @@ test("codestudio can restore back to html with optional parameters", t => {
   let output = sourceAndRedactedToHtml(source, redacted, codestudio);
   t.equal(
     output,
-    '<p>contenu <div class="stage-guide" data-start="2"></div> de base</p>\n'
+    '<p>contenu <div class="stage_guide" data-start="2"></div> de base</p>\n'
   );
 
   source = "basic [code-studio 2-5] content";
   output = sourceAndRedactedToHtml(source, redacted, codestudio);
   t.equal(
     output,
-    '<p>contenu <div class="stage-guide" data-start="2" data-end="5"></div> de base</p>\n'
+    '<p>contenu <div class="stage_guide" data-start="2" data-end="5"></div> de base</p>\n'
   );
 
   source = "basic [code-studio 12903-19201] content";
   output = sourceAndRedactedToHtml(source, redacted, codestudio);
   t.equal(
     output,
-    '<p>contenu <div class="stage-guide" data-start="12903" data-end="19201"></div> de base</p>\n'
+    '<p>contenu <div class="stage_guide" data-start="12903" data-end="19201"></div> de base</p>\n'
   );
 });

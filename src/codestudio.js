@@ -9,7 +9,7 @@ const CODESTUDIO = "codestudio";
  *
  * Specifically, given syntax like `[code-studio]`, optionally with range
  * parameters like `[code-studio 1]` or `[code-studio 3-5]`, it renders a div
- * with the class "stage-guide" and the optional parameters included as data
+ * with the class "stage_guide" and the optional parameters included as data
  * attributes.
  *
  * @example
@@ -19,7 +19,7 @@ const CODESTUDIO = "codestudio";
  *   const unified = require('unified');
  *
  *   const source = "Markdown containing [code-studio 1-2] syntax"
- *   // returns: "<p>Markdown containing <div class="stage-guide" data-start="1" data-end="2"></div> syntax</p>"
+ *   // returns: "<p>Markdown containing <div class="stage_guide" data-start="1" data-end="2"></div> syntax</p>"
  *   unified().use([
  *     parse,      // use the standard parser
  *     codestudio, // use this extension
@@ -84,7 +84,7 @@ function tokenizeCodeStudio(eat, value, silent) {
     type: "div",
     data: {
       hProperties: {
-        className: "stage-guide",
+        className: "stage_guide",
         dataStart: start,
         dataEnd: end
       }

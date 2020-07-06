@@ -12,6 +12,10 @@ const CODESTUDIO = "codestudio";
  * with the class "stage_guide" and the optional parameters included as data
  * attributes.
  *
+ * One way in which this generated div gets used is as a hook for clientside
+ * scripts to pull in content from code studio.
+ * @see https://github.com/code-dot-org/curriculumbuilder/blob/69b1f1ec2927a98bbf14248df393b8bd52883414/static/js/lesson.js#L63
+ *
  * @example
  *
  *   const parse = require('remark-parse');

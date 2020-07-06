@@ -148,6 +148,21 @@ test("tip plugin renders a basic tip indented with tabs", t => {
   t.equal(output, expected);
 });
 
+test("tip plugin does not render title paragraph unless there is a title", t => {
+  // Guides have no default title, and the current logic will only render the
+  // paragraph containing both the icon and the title text if there is a title,
+  // so a guide without a title will render without an icon.
+  //
+  // This test is meant to document current behavior, not to comment on desired
+  // behavior; we do in fact probably want to fix this behavior in the long
+  // term.
+  t.plan(1);
+  const input = "!!!guide <content-0>\n\n\tinner content";
+  const output = markdownToHtml(input, tip);
+  const expected = '<div class="admonition guide"><p>inner content</p></div>\n';
+  t.equal(output, expected);
+});
+
 test("tip plugin can redact a basic tip", t => {
   t.plan(1);
   const input =

@@ -97,7 +97,8 @@ function tokenizeTip(eat, value, silent) {
   }
 
   const tipType = match[1];
-  const title = match[2] || "";
+  const originalTitle = match[2] || "";
+  const displayTitle = originalTitle || DEFAULT_TITLE[tipType];
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
   const children = this.tokenizeBlock(
@@ -114,7 +115,7 @@ function tokenizeTip(eat, value, silent) {
       redactionContent: [
         {
           type: "text",
-          value: title
+          value: originalTitle
         }
       ],
       redactionData: {
@@ -124,31 +125,33 @@ function tokenizeTip(eat, value, silent) {
     });
   }
 
-  children.unshift({
-    type: "paragraph",
-    children: [
-      {
-        type: "emphasis",
-        children: [],
-        data: {
-          hName: "i",
-          hProperties: {
-            className: ICON_CLASS[tipType]
+  if (displayTitle) {
+    children.unshift({
+      type: "paragraph",
+      children: [
+        {
+          type: "emphasis",
+          children: [],
+          data: {
+            hName: "i",
+            hProperties: {
+              className: ICON_CLASS[tipType]
+            }
           }
+        },
+        {
+          type: "text",
+          value: displayTitle
         }
-      },
-      {
-        type: "text",
-        value: title || DEFAULT_TITLE[tipType]
+      ],
+      data: {
+        hProperties: {
+          className: "admonition-title",
+          id: `${tipType}_${id || 'None'}`
+        }
       }
-    ],
-    data: {
-      hProperties: {
-        className: "admonition-title",
-        id: `${tipType}_${id || 'None'}`
-      }
-    }
-  });
+    });
+  }
 
   return add({
     type: "div",

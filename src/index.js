@@ -1,5 +1,6 @@
 const blockfield = require('./blockfield');
 const blockly = require('./blockly');
+const codestudio = require('./codestudio');
 const details = require('./details');
 const div = require('./div');
 const divclass = require('./divclass');
@@ -14,6 +15,7 @@ const vocablink = require('./vocablink');
 module.exports = {
   blockfield,
   blockly,
+  codestudio,
   details,
   div,
   divclass,

@@ -254,3 +254,41 @@ test("tip plugin can restore a basic tip without a title", t => {
     "!!!tip <tip-0>\n    C'est du content of the tip, and it should be translatable\n    This is more stuff that is still part of the content of the tip\n\nThis is the next paragraph\n";
   t.equal(output, expected);
 });
+
+test("tip plugin renders two paragraphs with a blank line in between ", t => {
+  t.plan(1);
+  const input =
+    '!!!guide <content-0>\n' +
+    '\n' +
+    '    # a header\n' +
+    '    \n' +
+    '    a paragraph\n';
+  const output = markdownToHtml(input, tip);
+  const expected =
+    '<div class="admonition guide">' +
+      '<div></div>' +
+      '<div>' +
+        '<h1>a header</h1>' +
+      '</div>' +
+      '<div>' +
+        '<p>a paragraph</p>' +
+      '</div>' +
+    '</div>\n';
+  t.equal(output, expected);
+});
+
+test("tip plugin renders no blank line between title and paragraph", t => {
+  t.plan(1)
+  const input =
+    '!!!guide <content-0>\n' +
+    '    The only paragraph\n';
+  const output = markdownToHtml(input, tip);
+  const expected =
+    '<div class="admonition guide">' +
+      '<div>' +
+        '<p>The only paragraph</p>' +
+      '</div>' +
+    '</div>\n'
+  ;
+  t.equal(output, expected);
+});

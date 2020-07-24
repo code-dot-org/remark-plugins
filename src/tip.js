@@ -58,12 +58,28 @@ module.exports.restorationMethods = {
         },
         {
           type: "indent",
-          children
+          children: expandTipBodyChildren(children)
         }
       ]
     };
   }
 };
+
+/***
+ * In the tokenizeTip method below, there is a special logic to wrap the body
+ * children in divs using newline separation. This method reverses that logic
+ * to restore the original markdown.
+ */
+function expandTipBodyChildren(children) {
+  return children.reduce((accumulator, currentValue, index) => {
+    if (currentValue.type == 'div') {
+      accumulator = accumulator.concat(currentValue.children);
+    } else {
+      accumulator.push(currentValue);
+    }
+    return accumulator;
+  }, []);
+}
 
 function tokenizeTip(eat, value, silent) {
   const match = RE.exec(value);
@@ -110,7 +126,7 @@ function tokenizeTip(eat, value, silent) {
   const subvalueBlock = removeIndentation('\n' + subvalue, 4).split(/[\n]{2,}/);
 
   const children = subvalueBlock.map(block => ({
-    type: "div",
+    type: 'div',
     children: this.tokenizeBlock(
       block,
       eat.now())
@@ -122,7 +138,7 @@ function tokenizeTip(eat, value, silent) {
   if (redact) {
     return add({
       type: "blockRedaction",
-      children,
+      children: expandTipBodyChildren(children),
       redactionType: "tip",
       redactionContent: [
         {

@@ -215,16 +215,16 @@ test("tip plugin can restore a basic tip without a title", t => {
   t.equal(output, expected);
 });
 
-test("tip plugin renders two paragraphs with a blank line in between ", t => {
-  t.plan(1);
-  const input =
+test("tip plugin wraps newline-separated children in individual divs", t => {
+  t.plan(2);
+  const inputWithNewLine =
     '!!!guide <content-0>\n' +
     '\n' +
     '    # a header\n' +
     '    \n' +
     '    a paragraph\n';
-  const output = markdownToHtml(input, tip);
-  const expected =
+  const outputWithNewLine = markdownToHtml(inputWithNewLine, tip);
+  const expectedWithNewLine =
     '<div class="admonition guide">' +
       '<div></div>' +
       '<div>' +
@@ -234,21 +234,54 @@ test("tip plugin renders two paragraphs with a blank line in between ", t => {
         '<p>a paragraph</p>' +
       '</div>' +
     '</div>\n';
-  t.equal(output, expected);
+  t.equal(outputWithNewLine, expectedWithNewLine);
+
+  // otherwise
+  const inputWithoutNewLine =
+    '!!!guide <content-0>\n' +
+    '\n' +
+    '    # a header\n' +
+    '    a paragraph\n';
+  const outputWithoutNewLine = markdownToHtml(inputWithoutNewLine, tip);
+  const expectedWithoutNewLine =
+    '<div class="admonition guide">' +
+      '<div></div>' +
+      '<div>' +
+        '<h1>a header</h1>' +
+        '<p>a paragraph</p>' +
+      '</div>' +
+    '</div>\n';
+  t.equal(outputWithoutNewLine, expectedWithoutNewLine);
 });
 
-test("tip plugin renders no blank line between title and paragraph", t => {
-  t.plan(1)
-  const input =
+test("tip plugin renders an empty div when there is a newline between title and body", t => {
+  t.plan(2)
+  const inputWithoutNewLine =
     '!!!guide <content-0>\n' +
     '    The only paragraph\n';
-  const output = markdownToHtml(input, tip);
-  const expected =
+  const outputWithoutNewLine = markdownToHtml(inputWithoutNewLine, tip);
+  const expectedWithoutNewLine =
     '<div class="admonition guide">' +
       '<div>' +
         '<p>The only paragraph</p>' +
       '</div>' +
     '</div>\n'
   ;
-  t.equal(output, expected);
+  t.equal(outputWithoutNewLine, expectedWithoutNewLine);
+
+  // otherwise
+  const inputWithNewLine =
+    '!!!guide <content-0>\n' +
+    '\n' +
+    '    The only paragraph\n';
+  const outputWithNewLine = markdownToHtml(inputWithNewLine, tip);
+  const expectedWithNewLine =
+    '<div class="admonition guide">' +
+      '<div></div>' +
+      '<div>' +
+        '<p>The only paragraph</p>' +
+      '</div>' +
+    '</div>\n'
+  ;
+  t.equal(outputWithNewLine, expectedWithNewLine);
 });

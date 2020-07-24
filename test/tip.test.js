@@ -285,3 +285,50 @@ test("tip plugin renders an empty div when there is a newline between title and 
   ;
   t.equal(outputWithNewLine, expectedWithNewLine);
 });
+
+test("tip plugin restoration preserves extra newline", t => {
+  t.plan(1);
+  const source =
+    '!!!tip "this is an optional title, and it should be translatable" <tip-0>\n' +
+    '\n' +
+    '    This is the content of the tip, and it should be translatable\n' +
+    '    \n' +
+    '    This is more stuff that is still part of the content of the tip\n';
+
+  const redacted =
+    "[c'est une optional title, and it should be translatable][0]\n" +
+    "\n" +
+    "C'est du content of the tip, and it should be translatable\n" +
+    "\n" +
+    "This is more stuff that is still part of the content of the tip\n" +
+    "\n" +
+    "[/][0]\n";
+
+  const output = sourceAndRedactedToRestored(source, redacted, [tip, indent]);
+  const expected =
+    "!!!tip \"c'est une optional title, and it should be translatable\" <tip-0>\n" +
+    "    C'est du content of the tip, and it should be translatable\n" +
+    "\n" +
+    "    This is more stuff that is still part of the content of the tip\n"
+  t.equal(output, expected);
+});
+
+test("tip plugin redaction preserves extra newline", t => {
+  t.plan(1);
+  const input =
+    '!!!tip "this is an optional title, and it should be translatable" <tip-0>\n' +
+    '    This is the content of the tip, and it should be translatable\n' +
+    '    \n' +
+    '    This is more stuff that is still part of the content of the tip\n';
+  const output = markdownToRedacted(input, tip);
+  t.equal(
+    output,
+    '[this is an optional title, and it should be translatable][0]\n' +
+    '\n' +
+    'This is the content of the tip, and it should be translatable\n' +
+    '\n' +
+    'This is more stuff that is still part of the content of the tip\n' +
+    '\n' +
+    '[/][0]\n'
+  );
+});

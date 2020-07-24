@@ -101,10 +101,19 @@ function tokenizeTip(eat, value, silent) {
   const displayTitle = originalTitle || DEFAULT_TITLE[tipType];
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
-  const children = this.tokenizeBlock(
-    removeIndentation(subvalue, 4),
-    eat.now()
-  );
+  // hacky: add a new line character at the beginning of subvalue
+  const subvalueBlock = removeIndentation('\n' + subvalue, 4).split('\n\n');
+
+  let children = [];
+  subvalueBlock.forEach(block => {
+    children.push({
+      type: "div",
+      children: this.tokenizeBlock(
+        block,
+        eat.now())
+    })
+  });
+
   const add = eat(match[0] + subvalue);
 
   if (redact) {

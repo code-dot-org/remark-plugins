@@ -101,18 +101,21 @@ function tokenizeTip(eat, value, silent) {
   const displayTitle = originalTitle || DEFAULT_TITLE[tipType];
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
-  // hacky: add a new line character at the beginning of subvalue
+
+  // The original python-markdown renderer for CurriculumBuilder renders an empty div if
+  // there is a newline between title and body. We want to emulate that behavior here by
+  // adding a new line character at the beginning of the subvalue. If the subvalue begins
+  // with 2 newline characters, it will be treated by the split below as an empty block,
+  // and therefore will be rendered as an empty div.
   const subvalueBlock = removeIndentation('\n' + subvalue, 4).split('\n\n');
 
-  let children = [];
-  subvalueBlock.forEach(block => {
-    children.push({
-      type: "div",
-      children: this.tokenizeBlock(
-        block,
-        eat.now())
+  const children = subvalueBlock.map(block => ({
+    type: "div",
+    children: this.tokenizeBlock(
+      block,
+      eat.now())
     })
-  });
+  );
 
   const add = eat(match[0] + subvalue);
 

@@ -58,12 +58,28 @@ module.exports.restorationMethods = {
         },
         {
           type: "indent",
-          children
+          children: expandTipBodyChildren(children)
         }
       ]
     };
   }
 };
+
+/***
+ * In the tokenizeTip method below, there is a special logic to wrap the body
+ * children in divs using newline separation. This method reverses that logic
+ * to restore the original markdown.
+ */
+function expandTipBodyChildren(children) {
+  return children.reduce((accumulator, currentValue, index) => {
+    if (currentValue.type == 'div') {
+      accumulator = accumulator.concat(currentValue.children);
+    } else {
+      accumulator.push(currentValue);
+    }
+    return accumulator;
+  }, []);
+}
 
 function tokenizeTip(eat, value, silent) {
   const match = RE.exec(value);
@@ -101,16 +117,28 @@ function tokenizeTip(eat, value, silent) {
   const displayTitle = originalTitle || DEFAULT_TITLE[tipType];
   const id = match[3];
   const subvalue = value.slice(match[0].length, index);
-  const children = this.tokenizeBlock(
-    removeIndentation(subvalue, 4),
-    eat.now()
+
+  // The original python-markdown renderer for CurriculumBuilder renders an empty div if
+  // there is a newline between title and body. We want to emulate that behavior here by
+  // adding a new line character at the beginning of the subvalue. If the subvalue begins
+  // with 2 or more newline characters, it will be treated by the split below as an empty
+  // block, and therefore will be rendered as an empty div.
+  const subvalueBlock = removeIndentation('\n' + subvalue, 4).split(/[\n]{2,}/);
+
+  const children = subvalueBlock.map(block => ({
+    type: 'div',
+    children: this.tokenizeBlock(
+      block,
+      eat.now())
+    })
   );
+
   const add = eat(match[0] + subvalue);
 
   if (redact) {
     return add({
       type: "blockRedaction",
-      children,
+      children: expandTipBodyChildren(children),
       redactionType: "tip",
       redactionContent: [
         {

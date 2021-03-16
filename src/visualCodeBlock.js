@@ -1,7 +1,7 @@
 let redact;
 
 const VISUAL_BLOCK = "visualCodeBlock";
-const VISUAL_BLOCK_RE = /`([^`]*)`\((#[A-Fa-f0-9]{6})\)/;
+const VISUAL_BLOCK_RE = /^`([^`]*)`\((#[A-Fa-f0-9]{6})\)/;
 
 /**
  * A Remark-Redactable plugin for creating generic styled code blocks which
@@ -82,12 +82,5 @@ tokenizeVisualCodeBlock.notInLink = true;
 tokenizeVisualCodeBlock.locator = locateVisualCodeBlock;
 
 function locateVisualCodeBlock(value, fromIndex) {
-  if (value[fromIndex] !== "[") {
-    return;
-  }
-
-  const match = VISUAL_BLOCK_RE.exec(value);
-  if (match && match.index >= fromIndex) {
-    return match.index;
-  }
+  return value.indexOf('`', fromIndex);
 }

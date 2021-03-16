@@ -21,6 +21,16 @@ test("visualCodeBlocks can render", t => {
   );
 });
 
+test("visualCodeBlocks can render in a block", t => {
+  t.plan(1);
+  const input = "# Test\n\n- `some visual block`(#c0ffee)";
+  const output = markdownToHtml(input, visualCodeBlock);
+  t.equal(
+    output,
+    '<h1>Test</h1>\n<ul>\n<li><code class="visual-block" style="background-color: #c0ffee;">some visual block</code></li>\n</ul>\n'
+  );
+});
+
 test("visualCodeBlocks does not interfere with rendering of regular code blocks", t => {
   t.plan(1);
   const input = "`some regular code`";

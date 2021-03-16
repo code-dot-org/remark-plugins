@@ -10,6 +10,7 @@ const rawtext = require('./rawtext');
 const resourcelink = require('./resourcelink');
 const tip = require('./tip');
 const tiplink = require('./tiplink');
+const visualCodeBlock = require('./visualCodeBlock');
 const vocablink = require('./vocablink');
 
 module.exports = {
@@ -25,5 +26,6 @@ module.exports = {
   resourcelink,
   tip,
   tiplink,
+  visualCodeBlock,
   vocablink
 };

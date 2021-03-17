@@ -78,7 +78,7 @@ function tokenizeVisualCodeBlock(eat, value, silent) {
   });
 }
 
-tokenizeVisualCodeBlock.notInLink = true;
+tokenizeVisualCodeBlock.notInLink = false;
 tokenizeVisualCodeBlock.locator = locateVisualCodeBlock;
 
 function locateVisualCodeBlock(value, fromIndex) {

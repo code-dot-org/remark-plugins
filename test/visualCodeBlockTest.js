@@ -21,6 +21,17 @@ test("visualCodeBlocks can render", t => {
   );
 });
 
+test("visualCodeBlocks work when inside links", t => {
+  t.plan(1);
+  const input =
+    "Check out the [`playSound()`(#fff176)](https://studio.code.org/docs/gamelab/playSound/) block";
+  const output = markdownToHtml(input, visualCodeBlock);
+  t.equal(
+    output,
+    '<p>Check out the <a href="https://studio.code.org/docs/gamelab/playSound/"><code class="visual-block" style="background-color: #fff176;">playSound()</code></a> block</p>\n'
+  );
+});
+
 test("visualCodeBlocks can render in a block", t => {
   t.plan(1);
   const input = "# Test\n\n- `some visual block`(#c0ffee)";

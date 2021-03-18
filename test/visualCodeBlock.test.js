@@ -15,9 +15,6 @@ test("visualCodeBlocks can render", t => {
   t.plan(1);
   const input = "`some visual block`(#c0ffee)";
   const output = markdownToHtml(input, visualCodeBlock);
-  // it's definitely not great that our implementation means that we have to
-  // include such verbose styles here in the test. This might be a reason to
-  // implement styles as CSS rather than inline.
   const expected =
     '<p><code class="visual-block" style="background-color: #c0ffee;">some visual block</code></p>\n';
   t.equal(output, expected);

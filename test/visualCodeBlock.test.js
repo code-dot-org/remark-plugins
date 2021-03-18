@@ -19,7 +19,7 @@ test("visualCodeBlocks can render", t => {
   // include such verbose styles here in the test. This might be a reason to
   // implement styles as CSS rather than inline.
   const expected =
-    '<p><code class="visual-block" style="background-color: #c0ffee; border: none; box-shadow: inset -1px -1px 1px rgba(0,0,0,0.5), inset 1px 1px 1px 0 rgba(255,255,255,0.8); color: #000;">some visual block</code></p>\n';
+    '<p><code class="visual-block" style="background-color: #c0ffee;">some visual block</code></p>\n';
   t.equal(output, expected);
 });
 
@@ -29,7 +29,7 @@ test("visualCodeBlocks work when inside links", t => {
     "Check out the [`playSound()`(#fff176)](https://studio.code.org/docs/gamelab/playSound/) block";
   const output = markdownToHtml(input, visualCodeBlock);
   const expected =
-    '<p>Check out the <a href="https://studio.code.org/docs/gamelab/playSound/"><code class="visual-block" style="background-color: #fff176; border: none; box-shadow: inset -1px -1px 1px rgba(0,0,0,0.5), inset 1px 1px 1px 0 rgba(255,255,255,0.8); color: #000;">playSound()</code></a> block</p>\n';
+    '<p>Check out the <a href="https://studio.code.org/docs/gamelab/playSound/"><code class="visual-block" style="background-color: #fff176;">playSound()</code></a> block</p>\n';
   t.equal(output, expected);
 });
 
@@ -38,7 +38,7 @@ test("visualCodeBlocks can render in a block", t => {
   const input = "# Test\n\n- `some visual block`(#c0ffee)";
   const output = markdownToHtml(input, visualCodeBlock);
   const expected =
-    '<h1>Test</h1>\n<ul>\n<li><code class="visual-block" style="background-color: #c0ffee; border: none; box-shadow: inset -1px -1px 1px rgba(0,0,0,0.5), inset 1px 1px 1px 0 rgba(255,255,255,0.8); color: #000;">some visual block</code></li>\n</ul>\n';
+    '<h1>Test</h1>\n<ul>\n<li><code class="visual-block" style="background-color: #c0ffee;">some visual block</code></li>\n</ul>\n';
   t.equal(output, expected);
 });
 

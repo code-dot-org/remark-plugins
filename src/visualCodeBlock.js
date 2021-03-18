@@ -71,15 +71,10 @@ function tokenizeVisualCodeBlock(eat, value, silent) {
     value: displayText,
     data: {
       hProperties: {
-        // I'm not 100% sure that we actually need a class here, but including
-        // it just in case.
+        // Class name is here primarily so that we can style these blocks
+        // beyond just background color.
         className: "visual-block",
-        style: [
-          `background-color: ${color};`,
-          "border: none;",
-          "box-shadow: inset -1px -1px 1px rgba(0,0,0,0.5), inset 1px 1px 1px 0 rgba(255,255,255,0.8);",
-          "color: #000;"
-        ].join(" ")
+        style: `background-color: ${color};`
       }
     }
   });

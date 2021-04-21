@@ -8,11 +8,11 @@ const expandableImages = require("./expandableImages");
 const indent = require("./indent");
 const link = require("./link");
 const rawtext = require("./rawtext");
-const resourcelink = require("./resourcelink");
+const resourceLink = require("./resourceLink");
 const tip = require("./tip");
 const tiplink = require("./tiplink");
 const visualCodeBlock = require("./visualCodeBlock");
-const vocablink = require("./vocablink");
+const vocabularyDefinition = require("./vocabularyDefinition");
 const xmlAsTopLevelBlock = require("./xmlAsTopLevelBlock");
 
 module.exports = {
@@ -26,10 +26,10 @@ module.exports = {
   indent,
   link,
   rawtext,
-  resourcelink,
+  resourceLink,
   tip,
   tiplink,
   visualCodeBlock,
-  vocablink,
+  vocabularyDefinition,
   xmlAsTopLevelBlock
 };

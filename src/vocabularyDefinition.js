@@ -1,36 +1,34 @@
 let redact;
 
-const VOCABLINK_RE = /^\[v ([^\]]+)\](?:\[([^\]]+)\])?/;
-const VOCABLINK = 'vocablink';
+const VOCAB_DEFINITION_RE = /^\[v (?<vocabulary>[a-z_]+)\/(?<offering>[a-z\-]+)\/(?<version>\d+)\]/;
+const VOCAB_DEFINITION = 'vocabularyDefinition';
 
 /**
- * Plugin that adds support for Curriculum Builder's vocablinks.
+ * Plugin that adds support for "Vocab Definitions" as used by Dashboard's
+ * Markdown Preprocessor
  *
- * Note that vocab links are ONLY supported in redaction mode; rendering them
- * out requires CurriculumBuilder database access, so they can only be rendered
- * by Curriculum Builder itself.
+ * Note that vocab definitions are ONLY supported in redaction mode; rendering
+ * them out requires database access, so they can only be rendered by Dashboard
+ * itself.
  *
- * see https://github.com/mrjoshida/curriculumbuilder/blob/bf74aa5/curriculumBuilder/vocablinks.py
+ * see https://github.com/code-dot-org/code-dot-org/blob/35c0853eefd8ffe656540cfb67fe1281de8eb434/dashboard/lib/services/markdown_preprocessor.rb
  * @requires restorationRegistration
  */
-module.exports = function vocablink() {
+module.exports = function vocabularyDefinition() {
   if (this.Parser) {
     const Parser = this.Parser;
     redact = Parser.prototype.options.redact;
-    Parser.prototype.inlineTokenizers[VOCABLINK] = tokenizeVocablink;
+    Parser.prototype.inlineTokenizers[VOCAB_DEFINITION] = tokenizeVocabularyDefinition;
 
     // Run it just before `html`
     const methods = Parser.prototype.inlineMethods;
-    methods.splice(methods.indexOf('html'), 0, VOCABLINK);
+    methods.splice(methods.indexOf('html'), 0, VOCAB_DEFINITION);
   }
 };
 
 module.exports.restorationMethods = {
-  [VOCABLINK]: function(node, content) {
-    let value = `[v ${node.redactionData}]`;
-    if (content) {
-      value += `[${content}]`;
-    }
+  [VOCAB_DEFINITION]: function(node) {
+    const value = `[v ${node.redactionData.vocabulary}/${node.redactionData.offering}/${node.redactionData.version}]`;
     return {
       type: 'rawtext',
       value
@@ -38,37 +36,36 @@ module.exports.restorationMethods = {
   }
 };
 
-tokenizeVocablink.notInLink = true;
-tokenizeVocablink.locator = locateVocablink;
+tokenizeVocabularyDefinition.notInLink = true;
+tokenizeVocabularyDefinition.locator = locateVocabularyDefinition;
 
-function tokenizeVocablink(eat, value, silent) {
-  const match = VOCABLINK_RE.exec(value);
+function tokenizeVocabularyDefinition(eat, value, silent) {
+  const match = VOCAB_DEFINITION_RE.exec(value);
 
-  if (match) {
-    if (silent) {
-      return true;
-    }
+  if (!match) {
+    return;
+  }
 
-    const add = eat(match[0]);
-    const vocabword = match[1];
-    const override = match[2];
-    if (redact) {
-      return add({
-        type: 'inlineRedaction',
-        redactionType: VOCABLINK,
-        redactionData: vocabword,
-        redactionContent: [
-          {
-            type: 'text',
-            value: override || vocabword
-          }
-        ]
-      });
-    }
+  if (silent) {
+    return true;
+  }
 
-    // In non-redaction mode, eat the vocab link so it is not treated as a
-    // different bit of syntax (such as linkReference) but simply output it back
-    // to the raw string
+  const add = eat(match[0]);
+
+  if (redact) {
+    return add({
+      type: 'inlineRedaction',
+      redactionType: VOCAB_DEFINITION,
+      redactionData: match.groups,
+      redactionContent: [{
+        type: 'text',
+        value: match.groups.vocabulary
+      }]
+    });
+  } else {
+    // In non-redaction mode, eat the definition so it is not treated as a
+    // different bit of syntax (such as linkReference) but simply output it
+    // back to the raw string
     return add({
       type: 'rawtext',
       value: match[0]
@@ -76,6 +73,6 @@ function tokenizeVocablink(eat, value, silent) {
   }
 }
 
-function locateVocablink(value, fromIndex) {
+function locateVocabularyDefinition(value, fromIndex) {
   return value.indexOf('[v ', fromIndex);
 }

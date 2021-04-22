@@ -1,11 +1,8 @@
 const test = require('tape');
 
 const {
-  mapMdast,
   markdownToHtml,
   markdownToRedacted,
-  markdownToSyntaxTree,
-  sourceAndRedactedToHtml,
   sourceAndRedactedToRestored
 } = require('./utils');
 

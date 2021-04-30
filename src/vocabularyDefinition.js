@@ -1,6 +1,6 @@
 let redact;
 
-const VOCAB_DEFINITION_RE = /^\[v (?<vocabulary>[a-z_]+)\/(?<offering>[a-z\-]+)\/(?<version>\d+)\]/;
+const VOCAB_DEFINITION_RE = /^\[v ([a-z_]+)\/([a-z\-]+)\/(\d+)\]/;
 const VOCAB_DEFINITION = 'vocabularyDefinition';
 
 /**
@@ -53,13 +53,19 @@ function tokenizeVocabularyDefinition(eat, value, silent) {
   const add = eat(match[0]);
 
   if (redact) {
+    const redactionData = {
+      vocabulary: match[1],
+      offering: match[2],
+      version: match[3],
+    };
+
     return add({
       type: 'inlineRedaction',
       redactionType: VOCAB_DEFINITION,
-      redactionData: match.groups,
+      redactionData,
       redactionContent: [{
         type: 'text',
-        value: match.groups.vocabulary
+        value: redactionData.vocabulary
       }]
     });
   } else {

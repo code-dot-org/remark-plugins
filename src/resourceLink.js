@@ -1,6 +1,6 @@
 let redact;
 
-const RESOURCE_LINK_RE = /^\[r (?<resource>[a-z0-9\-\_]+)\/(?<offering>[a-z\-]+)\/(?<version>\d+)\]/;
+const RESOURCE_LINK_RE = /^\[r ([a-z0-9\-\_]+)\/([a-z\-]+)\/(\d+)\]/;
 const RESOURCE_LINK = 'resourceLink';
 
 /**
@@ -53,13 +53,19 @@ function tokenizeResourceLink(eat, value, silent) {
   const add = eat(match[0]);
 
   if (redact) {
+    const redactionData = {
+      resource: match[1],
+      offering: match[2],
+      version: match[3],
+    };
+
     return add({
       type: 'inlineRedaction',
       redactionType: RESOURCE_LINK,
-      redactionData: match.groups,
+      redactionData,
       redactionContent: [{
         type: 'text',
-        value: match.groups.resource
+        value: redactionData.resource
       }]
     });
   } else {

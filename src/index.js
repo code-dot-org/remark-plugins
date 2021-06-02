@@ -5,6 +5,7 @@ const details = require("./details");
 const div = require("./div");
 const divclass = require("./divclass");
 const expandableImages = require("./expandableImages");
+const fontAwesomeIcon = require("./fontAwesomeIcon");
 const indent = require("./indent");
 const link = require("./link");
 const rawtext = require("./rawtext");
@@ -23,6 +24,7 @@ module.exports = {
   div,
   divclass,
   expandableImages,
+  fontAwesomeIcon,
   indent,
   link,
   rawtext,

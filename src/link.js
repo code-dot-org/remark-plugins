@@ -82,7 +82,6 @@ function redactLink(node) {
   delete node.title;
 
   node.redactionContent = node.children;
-  delete node.children;
 }
 
 function redactImage(node) {
@@ -112,7 +111,7 @@ module.exports.restorationMethods = {
       children: [
         {
           type: 'text',
-          value: content
+          value: content ? content : ''
         }
       ]
     };

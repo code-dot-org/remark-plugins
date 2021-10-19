@@ -103,17 +103,22 @@ function redactImage(node) {
 }
 
 module.exports.restorationMethods = {
-  link: function(node, content) {
+  link: function(node, content, children) {
+    let childNodes = [];
+    if (content) {
+      childNodes.push({
+        type: 'text',
+        value: content
+      });
+    }
+    else {
+      childNodes = children;
+    }
     return {
       type: 'link',
       url: node.redactionData.url,
       title: node.redactionData.title,
-      children: [
-        {
-          type: 'text',
-          value: content ? content : ''
-        }
-      ]
+      children: childNodes
     };
   },
   image: function(node, content) {

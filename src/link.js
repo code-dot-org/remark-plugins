@@ -117,7 +117,7 @@ module.exports.restorationMethods = {
       type: 'link',
       url: node.redactionData.url,
       title: node.redactionData.title,
-      children: childNodes
+      children: children
     };
   },
   image: function(node, content) {

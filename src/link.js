@@ -104,15 +104,14 @@ function redactImage(node) {
 
 module.exports.restorationMethods = {
   link: function(node, content, children) {
-    let childNodes = [];
+    // If this link has translated content, use that as the children. Otherwise, it could either
+    // be empty or have children of its own, and in either case we just want to use whatever
+    // we're given.
     if (content) {
-      childNodes.push({
+      children = [{
         type: 'text',
         value: content
-      });
-    }
-    else {
-      childNodes = children;
+      }];
     }
     return {
       type: 'link',

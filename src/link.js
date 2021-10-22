@@ -82,7 +82,6 @@ function redactLink(node) {
   delete node.title;
 
   node.redactionContent = node.children;
-  delete node.children;
 }
 
 function redactImage(node) {
@@ -104,17 +103,21 @@ function redactImage(node) {
 }
 
 module.exports.restorationMethods = {
-  link: function(node, content) {
+  link: function(node, content, children) {
+    // If this link has translated content, use that as the children. Otherwise, it could either
+    // be empty or have children of its own, and in either case we just want to use whatever
+    // we're given.
+    if (content) {
+      children = [{
+        type: 'text',
+        value: content
+      }];
+    }
     return {
       type: 'link',
       url: node.redactionData.url,
       title: node.redactionData.title,
-      children: [
-        {
-          type: 'text',
-          value: content
-        }
-      ]
+      children: children
     };
   },
   image: function(node, content) {

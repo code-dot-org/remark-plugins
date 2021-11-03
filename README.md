@@ -1,6 +1,6 @@
 # remark-plugins
 
-[![Travis Build Status](https://img.shields.io/travis/code-dot-org/remark-plugins/master.svg)](https://travis-ci.org/code-dot-org/remark-plugins/)
+[![Build Status](https://github.com/code-dot-org/remark-plugins/actions/workflows/continuous-integration-tests.yml/badge.svg?branch=master)](https://github.com/code-dot-org/remark-plugins/actions/workflows/continuous-integration-tests.yml)
 [![npm version](https://img.shields.io/npm/v/@code-dot-org/remark-plugins.svg)](https://www.npmjs.com/package/@code-dot-org/remark-plugins)
 
 Library of all [remark](https://remark.js.org/) plugins used by

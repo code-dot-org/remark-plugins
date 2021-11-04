@@ -40,11 +40,15 @@ module.exports.sourceAndRedactedToRestored = (
   } else {
     restorationMethods = plugin.restorationMethods;
   }
-  const redactedSourceTree = unified()
+  const indexAgnosticRedactedSourceTree = unified()
     .use(markdown, {commonmark: true})
     .use(redact)
     .use(plugin)
     .parse(source);
+  const redactedSourceTree = unified()
+    .use(markdown, {commonmark: true})
+    .use(redact)
+    .runSync(indexAgnosticRedactedSourceTree);
   const restorationTree = unified()
     .use(markdown, {commomark: true})
     .use(parseRestorations)

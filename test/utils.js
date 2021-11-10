@@ -40,28 +40,28 @@ module.exports.sourceAndRedactedToRestored = (
   } else {
     restorationMethods = plugin.restorationMethods;
   }
-  const indexAgnosticRedactedSourceTree = unified()
+  const parsedRedactionTree = unified()
     .use(markdown, {commonmark: true})
     .use(redact)
     .use(plugin)
     .parse(source);
-  const redactedSourceTree = unified()
+  const transformedRedactionTree = unified()
     .use(markdown, {commonmark: true})
     .use(redact)
-    .runSync(indexAgnosticRedactedSourceTree);
-  const restorationTree = unified()
+    .runSync(parsedRedactionTree);
+  const parsedRestorationTree = unified()
     .use(markdown, {commomark: true})
     .use(parseRestorations)
     .parse(redacted);
-  const mergedTree = unified()
-    .use(restore, redactedSourceTree, restorationMethods)
-    .runSync(restorationTree);
+  const transformedRestorationTree = unified()
+    .use(restore, transformedRedactionTree, restorationMethods)
+    .runSync(parsedRestorationTree);
   return unified()
     .use(stringify)
     .use(rawtext)
     .use(renderRestorations)
     .use(plugin)
-    .stringify(mergedTree);
+    .stringify(transformedRestorationTree);
 };
 
 module.exports.sourceAndRedactedToHtml = (source, redacted, plugin = null) => {

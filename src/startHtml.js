@@ -49,9 +49,7 @@ function tokenizeStartHtml(eat, value, silent) {
   if (silent) {
     return true;
   }
-
-  console.log("match[0]: " + match[0]);
-  console.log("value: " + value);
+  
   const add = eat(match[0]);
 
   if (redact) {

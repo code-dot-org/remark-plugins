@@ -7,9 +7,24 @@ const startHtml = require("../src/startHtml");
 test('startHtml plugin can redact inline', t => {
   t.plan(1);
   const markdown =
-    '<label style="margin: 0px; padding: 2px;" id="label3">some label</label>';
+    '<label style="margin: 0px; padding: 2px;" id="label3">' +
+    'some label' +
+    '</label>';
   const expected =
-    '[][0]some label[][1]\n'
+    '[][0]some label[][1]\n';
+
+  const rendered = markdownToRedacted(markdown, startHtml);
+  t.equal(rendered, expected);
+});
+
+test('startHtml plugin can redact nested html', t => {
+  t.plan(1);
+  const markdown =
+    '<button><button style="margin: 0px; padding: 2px;" id="label3">' +
+    'some label inside a button' +
+    '</button></button>';
+  const expected =
+    '[][0][][1]some label inside a button[][2][][3]\n';
 
   const rendered = markdownToRedacted(markdown, startHtml);
   t.equal(rendered, expected);
@@ -26,4 +41,6 @@ test('startHtml plugin can restore', t => {
 
   const rendered = sourceAndRedactedToRestored(source, translated, startHtml);
   t.equal(rendered, expected);
-})
+});
+
+

@@ -4,6 +4,10 @@
  * This plugin redacts all HTML tags and content in a start_html level string,
  * such that the translator only sees the relevant text to translate.
  *
+ * NOTE: this plugin does not support the redaction or restoration of <div>
+ *   tags, because Remark does not parse them to begin with
+ *   issue: https://github.com/remarkjs/remark/issues/185
+ *
  * @example
  * Source: <label
  *          style="margin: 0px; padding: 2px;
@@ -49,7 +53,7 @@ function tokenizeStartHtml(eat, value, silent) {
   if (silent) {
     return true;
   }
-  
+
   const add = eat(match[0]);
 
   if (redact) {

@@ -17,7 +17,7 @@ module.exports = function clickableText() {
     if (link && link.url && link.url.startsWith("#clickable=")) {
       const regexp = /#clickable=(.*)/;
       const matches = link.url.match(regexp);
-      if (matches?.length === 2) {
+      if (matches && matches.length === 2) {
         const id = matches[1];
 
         link.type = "b";

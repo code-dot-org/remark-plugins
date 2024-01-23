@@ -8,15 +8,16 @@
  *   <b data-id="id" class="clickable-text">text</b>
  */
 
+const CLICKABLETEXT_RE = /#clickable=(.*)/;
+
 module.exports = function clickableText() {
   const Parser = this.Parser;
   const tokenizers = Parser.prototype.inlineTokenizers;
-  const originalText = tokenizers.link;
+  const originalLinkTokenizer = tokenizers.link;
   tokenizers.link = function (eat, value, silent) {
-    const link = originalText.call(this, eat, value, silent);
+    const link = originalLinkTokenizer.call(this, eat, value, silent);
     if (link && link.url && link.url.startsWith("#clickable=")) {
-      const regexp = /#clickable=(.*)/;
-      const matches = link.url.match(regexp);
+      const matches = link.url.match(CLICKABLETEXT_RE);
       if (matches && matches.length === 2) {
         const id = matches[1];
 
@@ -33,5 +34,5 @@ module.exports = function clickableText() {
 
     return link;
   };
-  tokenizers.link.locator = originalText.locator;
+  tokenizers.link.locator = originalLinkTokenizer.locator;
 };

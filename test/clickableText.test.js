@@ -11,3 +11,12 @@ test("clickable text is converted", (t) => {
   const rendered = markdownToHtml(markdown, clickableText);
   t.equal(rendered, expected);
 });
+
+test("regular link is not converted", (t) => {
+  t.plan(1);
+  const markdown = "before [middle](#other=myid) after";
+  const expected = '<p>before <a href="#other=myid">middle</a> after</p>\n';
+
+  const rendered = markdownToHtml(markdown, clickableText);
+  t.equal(rendered, expected);
+});

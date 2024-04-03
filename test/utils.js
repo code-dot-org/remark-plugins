@@ -59,7 +59,7 @@ module.exports.markdownToHtml = (source, plugin = null) =>
   unified()
     .use(remarkParse, {commonmark: true})
     .use(remark2rehype, {allowDangerousHtml: true})
-    .use(rehypeRaw)
+    .use(rehypeRaw) // rehype-raw Allows raw HTML, preserving tags used for font-awesome icons
     .use(rehypeSanitize, schema)
     .use(rehypeStringify)
     .use(plugin)

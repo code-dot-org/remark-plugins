@@ -13,7 +13,7 @@ const basicInput = "The slide icon <i class=\"fa fa-list-alt\" aria-hidden=\"tru
 test('fontAwesomeIcon plugin does not change any rendering', t => {
   t.plan(1);
   const output = markdownToHtml(basicInput, fontAwesomeIcon);
-  t.equal(output, `<p>${basicInput}</p>\n`);
+  t.equal(output, `<p>${basicInput}</p>`);
 });
 
 test('fontAwesomeIcon plugin redacts fontAwesomeIcons', t => {

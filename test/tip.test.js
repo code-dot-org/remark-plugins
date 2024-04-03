@@ -21,7 +21,7 @@ test("tip plugin renders a basic tip", t => {
         '<p>This is the content of the tip, and it should be translatable\nThis is more stuff that is still part of the content of the tip</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -37,7 +37,7 @@ test("tip plugin renders a basic tip even with weird indentation", t => {
         '<p>This is the content of the tip, and it should be translatable, as should all the following blocks:\none\ntwo\nthree\nfour</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -53,7 +53,7 @@ test("tip plugin renders a basic tip without an id", t => {
         '<p>This is the content of the tip, and it should be translatable\nThis is more stuff that is still part of the content of the tip</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -69,7 +69,7 @@ test("tip plugin renders a basic tip without a title", t => {
         '<p>This is the content of the tip, and it should be translatable\nThis is more stuff that is still part of the content of the tip</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -88,7 +88,7 @@ test("tip plugin renders a tip with multiple children", t => {
         '<p>This is more stuff that is still part of the content of the tip</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -104,7 +104,7 @@ test("tip plugin renders a basic tip indented with tabs", t => {
         '<p>This is the content of the tip, and it should be translatable\nThis is more stuff that is still part of the content of the tip</p>' +
       '</div>' +
     '</div>\n' +
-    '<p>This is the next paragraph</p>\n';
+    '<p>This is the next paragraph</p>';
   t.equal(output, expected);
 });
 
@@ -119,7 +119,7 @@ test("tip plugin does not render title paragraph unless there is a title", t => 
   t.plan(1);
   const input = "!!!guide <content-0>\n\n\tinner content";
   const output = markdownToHtml(input, tip);
-  const expected = '<div class="admonition guide"><div></div><div><p>inner content</p></div></div>\n';
+  const expected = '<div class="admonition guide"><div></div><div><p>inner content</p></div></div>';
   t.equal(output, expected);
 });
 
@@ -233,7 +233,7 @@ test("tip plugin wraps newline-separated children in individual divs", t => {
       '<div>' +
         '<p>a paragraph</p>' +
       '</div>' +
-    '</div>\n';
+    '</div>';
   t.equal(outputWithNewLine, expectedWithNewLine);
 
   // otherwise
@@ -250,7 +250,7 @@ test("tip plugin wraps newline-separated children in individual divs", t => {
         '<h1>a header</h1>' +
         '<p>a paragraph</p>' +
       '</div>' +
-    '</div>\n';
+    '</div>';
   t.equal(outputWithoutNewLine, expectedWithoutNewLine);
 });
 
@@ -265,7 +265,7 @@ test("tip plugin renders an empty div when there is a newline between title and 
       '<div>' +
         '<p>The only paragraph</p>' +
       '</div>' +
-    '</div>\n'
+    '</div>'
   ;
   t.equal(outputWithoutNewLine, expectedWithoutNewLine);
 
@@ -281,7 +281,7 @@ test("tip plugin renders an empty div when there is a newline between title and 
       '<div>' +
         '<p>The only paragraph</p>' +
       '</div>' +
-    '</div>\n'
+    '</div>'
   ;
   t.equal(outputWithNewLine, expectedWithNewLine);
 });

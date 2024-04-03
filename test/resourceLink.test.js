@@ -13,7 +13,7 @@ const basicInput = "[r some-slug/course-offering/1999]";
 test('resourceLink plugin cannot render resourceLinks to html', t => {
   t.plan(1);
   const output = markdownToHtml(basicInput, resourceLink);
-  t.equal(output, "<p>[r some-slug/course-offering/1999]</p>\n");
+  t.equal(output, "<p>[r some-slug/course-offering/1999]</p>");
 });
 
 test('resourceLink plugin redacts resourceLinks', t => {

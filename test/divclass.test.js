@@ -13,24 +13,24 @@ test("divclass can render", t => {
   t.plan(1);
   const input = "[col-33]\n\nsimple content\n\n[/col-33]";
   const output = markdownToHtml(input, divclass);
-  t.equal(output, '<div class="col-33"><p>simple content</p></div>\n');
+  t.equal(output, '<div class="col-33"><p>simple content</p></div>');
 });
 
 test("divclass can render even with a bunch of extra whitespace", t => {
   t.plan(1);
   const input = "[col-33]   \n \nsimple content\n  \n     [/col-33]";
   const output = markdownToHtml(input, divclass);
-  t.equal(output, '<div class="col-33"><p>simple content</p></div>\n');
+  t.equal(output, '<div class="col-33"><p>simple content</p></div>');
 });
 
 test("divclass works without content - but only if separated by FOUR newlines", t => {
   t.plan(2);
   const validInput = "[empty]\n\n\n\n[/empty]";
-  t.equal(markdownToHtml(validInput, divclass), '<div class="empty"></div>\n');
+  t.equal(markdownToHtml(validInput, divclass), '<div class="empty"></div>');
   const invalidInput = "[empty]\n\n[/empty]";
   t.equal(
     markdownToHtml(invalidInput, divclass),
-    "<p>[empty]</p>\n<p>[/empty]</p>\n"
+    "<p>[empty]</p>\n<p>[/empty]</p>"
   );
 });
 
@@ -41,7 +41,7 @@ test("divclass can render within other content", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<p>outside of div</p>\n<div class="divname"><p>inside div</p></div>\n<p>more outside</p>\n'
+    '<p>outside of div</p>\n<div class="divname"><p>inside div</p></div>\n<p>more outside</p>'
   );
 });
 
@@ -52,7 +52,7 @@ test("divclass doesn't care about duplicate classes", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<div class="classname"><p>first</p></div>\n<div class="classname"><p>second</p></div>\n'
+    '<div class="classname"><p>first</p></div>\n<div class="classname"><p>second</p></div>'
   );
 });
 
@@ -62,7 +62,7 @@ test("divclasses can nest", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<div class="outer"><div class="inner"><p>nested</p></div></div>\n'
+    '<div class="outer"><div class="inner"><p>nested</p></div></div>'
   );
 });
 
@@ -73,7 +73,7 @@ test("divclasses can nest duplicate", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<div class="classname"><p>content</p><div class="classname"><p>inner content</p></div><p>content</p></div>\n'
+    '<div class="classname"><p>content</p><div class="classname"><p>inner content</p></div><p>content</p></div>'
   );
 });
 
@@ -91,7 +91,7 @@ test("divclasses can nest as deeply as you want", t => {
   for (let _ = 0; _ < 20; _++) {
     input = `${markdownOpen}${input}${markdownClose}`;
     output = `${htmlOpen}${output}${htmlClose}`;
-    t.equal(markdownToHtml(input, divclass), output + "\n");
+    t.equal(markdownToHtml(input, divclass), output);
   }
 });
 
@@ -99,14 +99,14 @@ test("divclass requires class-specific termination", t => {
   t.plan(1);
   const input = "[example]\n\nsimple content\n\n[/]";
   const output = markdownToHtml(input, divclass);
-  t.equal(output, "<p>[example]</p>\n<p>simple content</p>\n<p>[/]</p>\n");
+  t.equal(output, "<p>[example]</p>\n<p>simple content</p>\n<p>[/]</p>");
 });
 
 test("divclasses must be in their own paragraphs", t => {
   t.plan(1);
   const input = "[example]simple content[/example]";
   const output = markdownToHtml(input, divclass);
-  t.equal(output, "<p>[example]simple content[/example]</p>\n");
+  t.equal(output, "<p>[example]simple content[/example]</p>");
 });
 
 test("divclasses will not unindent", t => {
@@ -115,7 +115,7 @@ test("divclasses will not unindent", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<div class="example"><pre><code>simple content\n</code></pre></div>\n'
+    '<div class="example"><pre><code>simple content\n</code></pre></div>'
   );
 });
 
@@ -126,7 +126,7 @@ test("divclasses can render complex content", t => {
   const output = markdownToHtml(input, divclass);
   t.equal(
     output,
-    '<div class="complex-example"><ul>\n<li>an ordered list</li>\n<li>with <strong>inline</strong> <em>formatting</em>, too</li>\n</ul></div>\n'
+    '<div class="complex-example"><ul>\n<li>an ordered list</li>\n<li>with <strong>inline</strong> <em>formatting</em>, too</li>\n</ul></div>'
   );
 });
 
@@ -194,7 +194,7 @@ test("divclass can restore back to HTML", t => {
   const source = "[col-33]\n\nsimple content\n\n[/col-33]";
   const redacted = "[][0]\n\ncontenu simple\n\n[/][0]\n";
   const output = sourceAndRedactedToHtml(source, redacted, divclass);
-  t.equal(output, '<div class="col-33"><p>contenu simple</p></div>\n');
+  t.equal(output, '<div class="col-33"><p>contenu simple</p></div>');
 });
 
 test("divclass can restore nested divclasses", t => {
@@ -204,7 +204,7 @@ test("divclass can restore nested divclasses", t => {
   const output = sourceAndRedactedToHtml(source, redacted, divclass);
   t.equal(
     output,
-    '<div class="outer"><div class="inner"><p>imbriqué</p></div></div>\n'
+    '<div class="outer"><div class="inner"><p>imbriqué</p></div></div>'
   );
 });
 
@@ -217,7 +217,7 @@ test("divclass can restore inline content inside a divclass", t => {
   const output = sourceAndRedactedToHtml(source, redacted, [divclass, link]);
   t.equal(
     output,
-    '<div class="complex-example"><ul>\n<li>une liste ordonnée</li>\n<li>avec <a href="http://example.com">d\'autres contenus rédigés</a></li>\n</ul></div>\n'
+    '<div class="complex-example"><ul>\n<li>une liste ordonnée</li>\n<li>avec <a href="http://example.com">d\'autres contenus rédigés</a></li>\n</ul></div>'
   );
 });
 
@@ -228,7 +228,7 @@ test("divclass can restore content with reordered indexes", t => {
   const output = sourceAndRedactedToHtml(source, redacted, divclass);
   t.equal(
     output,
-    '<div class="one"><p>un</p></div>\n<div class="zero"><p>zéro</p></div>\n'
+    '<div class="one"><p>un</p></div>\n<div class="zero"><p>zéro</p></div>'
   );
 });
 
@@ -239,19 +239,19 @@ test("divclass can restore content with nesting changes", t => {
   const unNestedRedaction = "[][0]\n\n\n\n[/][0]\n\n[][1]\n\n\n\n[/][1]";
   t.equal(
     sourceAndRedactedToHtml(source, unNestedRedaction, divclass),
-    '<div class="zero"></div>\n<div class="one"></div>\n'
+    '<div class="zero"></div>\n<div class="one"></div>'
   );
 
   const invertedRedaction = "[][1]\n\n[][0]\n\n\n\n[/][0]\n\n[/][1]";
   t.equal(
     sourceAndRedactedToHtml(source, invertedRedaction, divclass),
-    '<div class="one"><div class="zero"></div></div>\n'
+    '<div class="one"><div class="zero"></div></div>'
   );
 
   const brokenRedaction = "[][0]\n\n[][1]\n\n\n\n[/][0]\n\n[/][1]";
   t.equal(
     sourceAndRedactedToHtml(source, brokenRedaction, divclass),
-    '<div class="zero"><p>[][1]</p></div>\n<p>[/][1]</p>\n'
+    '<div class="zero"><p>[][1]</p></div>\n<p>[/][1]</p>'
   );
 });
 
@@ -264,7 +264,7 @@ test("divclass can restore content that adds extra content", t => {
     "[][0]\n\nPremier\n\n[/][0]\n\n[][1]\n\nDeuxième\n\n[/][1]\n\n[][1]\n\nTroisième\n\n[/][1]";
   t.equal(
     sourceAndRedactedToHtml(source, reusedIndex, divclass),
-    '<div class="first"><p>Premier</p></div>\n<div class="second"><p>Deuxième</p></div>\n<div class="second"><p>Troisième</p></div>\n'
+    '<div class="first"><p>Premier</p></div>\n<div class="second"><p>Deuxième</p></div>\n<div class="second"><p>Troisième</p></div>'
   );
 
   // in every case, extra redactions default to raw markdown
@@ -272,7 +272,7 @@ test("divclass can restore content that adds extra content", t => {
     "[][0]\n\nPremier\n\n[/][0]\n\n[][1]\n\nDeuxième\n\n[/][1]\n\n[][2]\n\nTroisième\n\n[/][2]";
   t.equal(
     sourceAndRedactedToHtml(source, extraIndex, divclass),
-    '<div class="first"><p>Premier</p></div>\n<div class="second"><p>Deuxième</p></div>\n<p>[][2]</p>\n<p>Troisième</p>\n<p>[/][2]</p>\n'
+    '<div class="first"><p>Premier</p></div>\n<div class="second"><p>Deuxième</p></div>\n<p>[][2]</p>\n<p>Troisième</p>\n<p>[/][2]</p>'
   );
 });
 
@@ -281,5 +281,5 @@ test("divclass can NOT restore content if required whitespace is removed", t => 
   const source = "[clazz]\n\nCat\n\n[/clazz]";
   const redacted = "[][0]\nChat\n[/][0]";
   const output = sourceAndRedactedToHtml(source, redacted, divclass);
-  t.equal(output, "<p>[][0]\nChat\n[/][0]</p>\n");
+  t.equal(output, "<p>[][0]\nChat\n[/][0]</p>");
 });

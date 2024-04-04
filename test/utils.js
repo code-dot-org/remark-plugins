@@ -1,28 +1,74 @@
 const unified = require('unified');
-const stringify = require('remark-stringify');
-const markdown = require('remark-parse');
-const html = require('remark-html');
+const remarkStringify = require('remark-stringify');
+const remarkParse = require('remark-parse');
+const remark2rehype = require('remark-rehype');
+const rehypeRaw = require('rehype-raw');
+const rehypeSanitize = require('rehype-sanitize');
+const rehypeStringify = require('rehype-stringify');
+const defaultSanitizationSchema = require('hast-util-sanitize/lib/github')
 const {redact, restore, parseRestorations, renderRestorations} = require('remark-redactable');
 const rawtext = require('../src/rawtext');
 
+// create custom sanitization schema as per
+// https://github.com/syntax-tree/hast-util-sanitize#schema
+// to support our custom syntaxes
+const schema = Object.assign({}, defaultSanitizationSchema);
+schema.clobber = [];
+
+// We use a _lot_ of image formatting stuff in our
+// instructions, particularly in CSP
+schema.attributes.img.push('height', 'width');
+
+// Add support for expandableImages
+schema.tagNames.push('span');
+schema.attributes.span = ['dataUrl', 'className'];
+
+// Add support for inline styles (gross)
+// TODO replace all inline styles in our curriculum content with
+// semantically-significant content
+schema.attributes['*'].push('style', 'className');
+
+// ClickableText uses data-id on a bold tag.
+schema.attributes['b'] = ['dataId'];
+
+// Add support for Blockly XML
+const blocklyTags = [
+  'block',
+  'functional_input',
+  'mutation',
+  'next',
+  'statement',
+  'title',
+  'field',
+  'value',
+  'xml',
+];
+schema.tagNames = schema.tagNames.concat(blocklyTags);
+
 module.exports.markdownToSyntaxTree = (source, plugin = null) =>
   unified()
-    .use(markdown, {commonmark: true})
-    .use(html)
+    .use(remarkParse, {commonmark: true})
+    .use(remark2rehype, {allowDangerousHtml: true})
+    .use(rehypeRaw)
+    .use(rehypeSanitize, schema)
+    .use(rehypeStringify)
     .use(plugin)
     .parse(source);
 
 module.exports.markdownToHtml = (source, plugin = null) =>
   unified()
-    .use(markdown, {commonmark: true})
-    .use(html)
+    .use(remarkParse, {commonmark: true})
+    .use(remark2rehype, {allowDangerousHtml: true})
+    .use(rehypeRaw) // rehype-raw Allows raw HTML, preserving tags used for font-awesome icons
+    .use(rehypeSanitize, schema)
+    .use(rehypeStringify)
     .use(plugin)
     .processSync(source).contents;
 
 module.exports.markdownToRedacted = (source, plugin = null) =>
   unified()
-    .use(markdown, {commonmark: true})
-    .use(stringify)
+    .use(remarkParse, {commonmark: true})
+    .use(remarkStringify)
     .use(redact)
     .use(plugin)
     .processSync(source).contents;
@@ -41,23 +87,23 @@ module.exports.sourceAndRedactedToRestored = (
     restorationMethods = plugin.restorationMethods;
   }
   const parsedRedactionTree = unified()
-    .use(markdown, {commonmark: true})
+    .use(remarkParse, {commonmark: true})
     .use(redact)
     .use(plugin)
     .parse(source);
   const transformedRedactionTree = unified()
-    .use(markdown, {commonmark: true})
+    .use(remarkParse, {commonmark: true})
     .use(redact)
     .runSync(parsedRedactionTree);
   const parsedRestorationTree = unified()
-    .use(markdown, {commomark: true})
+    .use(remarkParse, {commomark: true})
     .use(parseRestorations)
     .parse(redacted);
   const transformedRestorationTree = unified()
     .use(restore, transformedRedactionTree, restorationMethods)
     .runSync(parsedRestorationTree);
   return unified()
-    .use(stringify)
+    .use(remarkStringify)
     .use(rawtext)
     .use(renderRestorations)
     .use(plugin)

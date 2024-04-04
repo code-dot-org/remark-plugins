@@ -15,7 +15,7 @@ test('details can render', t => {
     'contents, which are sometimes further block elements\n' +
     ':::';
   const expected =
-    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
+    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -28,7 +28,7 @@ test('details can have a variable number of opening colons', t => {
     'contents, which are sometimes further block elements\n' +
     ':::::::::::::';
   const expected =
-    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
+    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -41,7 +41,7 @@ test('details can render markdown syntax in the summary', t => {
     'contents, which are sometimes further block elements\n' +
     ':::';
   const expected =
-    '<details><summary><strong>summary</strong> <em>content</em></summary><p>contents, which are sometimes further block elements</p></details>\n';
+    '<details><summary><strong>summary</strong> <em>content</em></summary><p>contents, which are sometimes further block elements</p></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -62,7 +62,7 @@ test('details can render markdown syntax in the body', t => {
     '<li>can</li>\n' +
     '<li>be</li>\n' +
     '<li>markdown</li>\n' +
-    '</ul></details>\n';
+    '</ul></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -76,7 +76,7 @@ test('details ignores trailing colons', t => {
     'contents, which are sometimes further block elements\n' +
     ':::::::::::::::::::::::::::::::::::::::::::::::::::::';
   const expected =
-    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
+    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -91,7 +91,7 @@ test('details ignores excess whitespace', t => {
     '\n' +
     ':::';
   const expected =
-    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>\n';
+    '<details><summary>summary-content</summary><p>contents, which are sometimes further block elements</p></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -106,7 +106,7 @@ test('details can nest', t => {
     ':::\n' +
     '::::';
   const expected =
-    '<details><summary>outer</summary><details><summary>inner</summary><p>innermost content</p></details></details>\n';
+    '<details><summary>outer</summary><details><summary>inner</summary><p>innermost content</p></details></details>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -121,7 +121,7 @@ test('details requires a summary block', t => {
   const expected =
     '<p>::: details\n' +
     'contents, which are sometimes further block elements\n' +
-    ':::</p>\n';
+    ':::</p>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -136,7 +136,7 @@ test('details requires at least three opening colons', t => {
   const expected =
     '<p>:: details [summary-content]\n' +
     'contents, which are sometimes further block elements\n' +
-    ':::</p>\n';
+    ':::</p>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);
@@ -149,7 +149,7 @@ test('details requires closing colons', t => {
     'contents, which are sometimes further block elements\n';
   const expected =
     '<p>::: details [summary-content]\n' +
-    'contents, which are sometimes further block elements</p>\n';
+    'contents, which are sometimes further block elements</p>';
 
   const rendered = markdownToHtml(markdown, details);
   t.equal(rendered, expected);

@@ -1,7 +1,6 @@
 const blockfield = require("./blockfield");
 const blockly = require("./blockly");
 const clickableText = require("./clickableText");
-const codestudio = require("./codestudio");
 const details = require("./details");
 const div = require("./div");
 const divclass = require("./divclass");
@@ -21,7 +20,6 @@ module.exports = {
   blockfield,
   blockly,
   clickableText,
-  codestudio,
   details,
   div,
   divclass,

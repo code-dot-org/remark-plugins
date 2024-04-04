@@ -25,13 +25,13 @@
     "eslint": "^5.16.0",
     "rehype-raw": "^5.1.0",
     "rehype-stringify": "^8.0.0",
-    "remark-parse": "^8.0.0",
-    "remark-redactable": "2.0.1",
+    "remark-parse": "^8.0.3",
+    "remark-redactable": "2.0.2",
     "remark-rehype": "^8.1.0",
-    "remark-stringify": "^6.0.4",
+    "remark-stringify": "^8.1.1",
     "tape": "^4.10.2",
     "unified": "^9.2.2",
-    "unist-builder": "^1.0.4"
+    "unist-builder": "^2.0.3"
   },
   "dependencies": {
     "rehype-sanitize": "^4.0.0"

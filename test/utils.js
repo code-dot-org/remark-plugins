@@ -48,7 +48,7 @@ schema.tagNames = schema.tagNames.concat(blocklyTags);
 module.exports.markdownToSyntaxTree = (source, plugin = null) =>
   unified()
     .use(remarkParse, {commonmark: true})
-    .use(remark2rehype)
+    .use(remark2rehype, {allowDangerousHtml: true})
     .use(rehypeRaw)
     .use(rehypeSanitize, schema)
     .use(rehypeStringify)

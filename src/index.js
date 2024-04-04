@@ -20,7 +20,6 @@ module.exports = {
   blockfield,
   blockly,
   clickableText,
-  codestudio,
   details,
   div,
   divclass,

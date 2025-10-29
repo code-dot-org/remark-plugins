@@ -30,7 +30,8 @@ module.exports = function expandableImages() {
       link.children = [
         {
           type: "text",
-          value: link.alt.substr(0, -1 * "expandable".length).trim()
+          // using slice instead of regular expression for speed!
+          value: link.alt.slice(0, -1 * "expandable".length).trim()
         }
       ];
     }

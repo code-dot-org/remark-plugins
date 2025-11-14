@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/code-dot-org/remark-plugins#readme",
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "eslint": "^9.39.1",
     "hast-util-sanitize": "^3.0.2",
     "rehype-raw": "^5.1.0",
     "rehype-sanitize": "^4.0.0",
